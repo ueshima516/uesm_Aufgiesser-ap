@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './components/Home';
 import LoginForm from './components/LoginForm';
-import MyCalendar from './components/MyCalender';
+import Calendar from './components/Calendar';
 
 function App () {
   return (
@@ -10,7 +10,7 @@ function App () {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/calendar" element={<MyCalendar />} />
+        <Route path="/calendar" element={<Calendar />} />
       </Routes>
     </BrowserRouter>
   );
