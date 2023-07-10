@@ -1,11 +1,3 @@
-import Hello from '../components/Hello'
+import Home from "@/components/Home";
 
-const TopPage = () => {
-  return (
-    <div>
-      <Hello />
-    </div>
-  );
-};
-
-export default TopPage;
+export default Home;
