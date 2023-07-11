@@ -10,7 +10,6 @@ def search_element_by_date(data, date_value):
     for key, inner_dict in data.items():
         if inner_dict.get("date") == date_value:
           dic.update({key: inner_dict})
-          # return inner_dict
     return dic
 
 # JSONファイルからデータを読み込む
@@ -22,8 +21,6 @@ result = search_element_by_date(DATA, DATE_TO_SEARCH)
 
 # 検索結果を出力する
 if result != {}:
-    formatted_date = result.get("date")
-    # print(formatted_date, result)
     print(result)
 else:
     print("指定した日付の要素は見つかりませんでした。")
