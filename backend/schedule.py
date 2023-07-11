@@ -7,12 +7,12 @@ EASY, NORMAL, HARD = [1,0,0,0,1,0,0], [1,0,1,0,1,0,1], [1,1,1,0,1,1,1]
 dic = {'EASY': EASY, 'NORMAL': NORMAL, 'HARD': HARD}
 
 
-def  make_schedule(start_date, end_date, start_time, end_time, work_time, menu):
+def  make_schedule(start_date, end_date, start_time, end_time, work_time, menu, mode):
   res = {}
-  schedule_template = dic["EASY"] # スケジュールテンプレート
+  schedule_template = dic[mode] # スケジュールテンプレート
   delta = (end_date - start_date).days
   
-  for idx in range(delta):
+  for idx in range(delta+1):
     flag = schedule_template[idx % 7] # テンプレート用の添字
     tar_date =  start_date + datetime.timedelta(days=idx)
   
@@ -31,6 +31,6 @@ def  make_schedule(start_date, end_date, start_time, end_time, work_time, menu):
 if __name__ == "__main__":
 
   start_date, end_date = datetime.date(2023,8,1), datetime.date(2023,8,31)
-  start_time, end_time, work_time, menu = "08:00", "08:30", "30", "running"
-  res = make_schedule(start_date, end_date, start_time, end_time, work_time, menu)
+  start_time, end_time, work_time, menu, mode = "08:00", "08:30", "30", "running", "EASY"
+  res = make_schedule(start_date, end_date, start_time, end_time, work_time, menu, mode)
   print(res)
