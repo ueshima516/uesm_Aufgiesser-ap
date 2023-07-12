@@ -11,7 +11,7 @@ function MyCalendar() {
 
   return (
     <div>
-      <h1>カレンダー</h1>
+      <h2>カレンダー</h2>
       <div>
         <Calendar
           value={date}
