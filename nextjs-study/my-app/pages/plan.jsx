@@ -10,6 +10,7 @@ export default function CalendarPage () {
       <Navigation />
       <Plan />
       <Pulldown title="種目" />
+      <Pulldown title="強度" />
     </div>
   );
 };

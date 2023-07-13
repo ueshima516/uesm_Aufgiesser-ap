@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GetPulldownItems from "./GetPulldownItems"
+import PulldownGetItems from "./PulldownGetItems"
 
 
 const SelectFormPage = ({ title }) => {
@@ -9,19 +9,16 @@ const SelectFormPage = ({ title }) => {
         setSelectedOption(e.target.value);
     };
 
-
+// TODO 選択してください のvalue ""とnullどっちが良いのかな てかJSってnullとかあったっけ
     return (
         <div>
             <label htmlFor="select-option">{title}:</label>
             <select id="select-option" value={selectedOption} onChange={handleOptionChange}>
                 <option value="">選択してください</option>
-                {GetPulldownItems().map(
+                {PulldownGetItems().map(
                     (item, index) => (
-                        <option key={index} value={item}>
-                            選択肢{item}
-                        </option>)
-                )
-                }
+                        <option key={index}>選択肢 {item}</option>)
+                )}
             </select>
         </div>
     );
