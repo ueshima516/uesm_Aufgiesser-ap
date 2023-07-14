@@ -9,7 +9,7 @@ function MyPlan() {
 
   return (
     <div>
-      <h2>計画立案〜〜</h2>
+      <h2>計画立案</h2>
     </div>
   );
 }
