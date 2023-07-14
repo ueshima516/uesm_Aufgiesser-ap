@@ -10,8 +10,8 @@ export default function CalendarPage () {
     <div>
       <Navigation />
       <Plan />
-      <Pulldown title="種目" />
-      <Pulldown title="強度" />
+      <Pulldown title="種目" li={["プール", "筋トレ", "ランニング"]} />
+      <Pulldown title="強度" li={["EASY", "NORMAL", "HARD"]} />
       <Pulldown_Time />
     </div>
   );

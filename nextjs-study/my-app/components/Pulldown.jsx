@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PulldownGetItems from "./PulldownGetItems"
 
 
-const SelectFormPage = ({ title }) => {
+const SelectFormPage = ({ title, li }) => {
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = (e) => {
@@ -15,9 +15,9 @@ const SelectFormPage = ({ title }) => {
             <label htmlFor="select-option">{title}:</label>
             <select id="select-option" value={selectedOption} onChange={handleOptionChange}>
                 <option value="">選択してください</option>
-                {PulldownGetItems().map(
+                {li.map(
                     (item, index) => (
-                        <option key={index}>選択肢 {item}</option>)
+                        <option key={index}> {item}</option>)
                 )}
             </select>
         </div>
