@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import styles from '../styles/LoginForm.module.css';
+
+import styles from '@/styles/LoginForm.module.css';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');

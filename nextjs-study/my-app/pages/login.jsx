@@ -1,6 +1,6 @@
 import React from "react";
-import Navigation from "@/components/Navigation";
-import LoginForm from "@/components/LoginForm";
+import Navigation from "@/components/Navigation/Navigation";
+import LoginForm from "@/components/Login/LoginForm";
 
 export default function LoginFormPage () {
   return (

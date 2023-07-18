@@ -1,6 +1,6 @@
 import React from "react";
-import Navigation from "@/components/Navigation"
-import Home from "@/components/Home";
+import Navigation from "@/components/Navigation/Navigation"
+import Home from "@/components/Home/Home";
 
 export default function HomePage () {
   return (

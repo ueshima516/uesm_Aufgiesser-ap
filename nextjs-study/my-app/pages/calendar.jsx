@@ -1,6 +1,6 @@
 import React from "react";
-import Navigation from "@/components/Navigation"
-import Calendar from "@/components/Calendar";
+import Navigation from "@/components/Navigation/Navigation"
+import Calendar from "@/components/Calendar/Calendar";
 
 export default function CalendarPage () {
   return (
