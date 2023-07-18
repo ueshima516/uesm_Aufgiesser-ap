@@ -24,6 +24,9 @@
          const nextConfig = {
            reactStrictMode: true,
          + trailingSlash: true,
+         + images: {
+         +  unoptimized: true,
+         +  },
          }
          ```
       1. package.json
