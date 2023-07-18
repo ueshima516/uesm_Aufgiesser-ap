@@ -17,6 +17,7 @@ function MyCalendar() {
         <Calendar
           value={date}
           onChange={handleDateChange}
+          locale="ja-JP" //これを明示的に書かないと、/calenderページでブラウザリロードでエラーが出る
         />
       </div>
     </div>
