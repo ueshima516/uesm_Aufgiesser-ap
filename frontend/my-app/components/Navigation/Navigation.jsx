@@ -12,7 +12,7 @@ function Navigation() {
 
 
       {/* TODO: Delete this */}
-      <Link href="/test">
+      <Link href="/gettest">
         <button className="button">Test Something</button>
       </Link>
       <span>　</span>
