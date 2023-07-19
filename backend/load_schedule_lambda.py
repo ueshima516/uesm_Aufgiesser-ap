@@ -42,16 +42,14 @@ def lambda_handler(event, context):
     """
     ALL_SCAN = False # DBの全データを読み込むならTrue, メアドで抽出するならFalse
     result = None
-    """ ここでeventからmail_adressを受け取りたい！！！！ """"
-    # print(event["body"])
-    # print(json.loads(event["body"]))
-    # body = json.loads(event["body"])
-    # print(body["mail_address"])
-
+    body = json.loads(event["body"])
+    # print(event["body"], body, type(body))
+    target_mail_address = body["mail_address"]
+   
     if(ALL_SCAN==True):
         result = scan_db()
     else:
-        target_mail_address = "xx@test.com" ### <- 引っ張ってくる
+        # target_mail_address = "xx@test.com" ### <- 引っ張ってくる
         result = scan_db_with_address(target_mail_address)
     
     # 検索結果を出力する
