@@ -17,6 +17,7 @@ function MyCalendar() {
         <Calendar
           value={date}
           onChange={handleDateChange}
+          locale="ja-JP"
         />
       </div>
     </div>
