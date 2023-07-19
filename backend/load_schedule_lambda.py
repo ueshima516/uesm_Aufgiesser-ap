@@ -6,10 +6,24 @@ data = {"output_text": {"b25f387c-2155-11ee-b258-825e158fd254": {"date": "2023/0
 TABLE_NAME = "fitshow_dev"
 
 
+
 def scan_db():
     dynamodb = boto3.resource('dynamodb').Table(TABLE_NAME)
+    # response = dynamodb.scan()
+    # print(response["Items"])
     response = dynamodb.scan()
+    return response["Items"]
 
+def scan_db_with_address(target_mail_address):
+    dynamodb = boto3.resource('dynamodb').Table(TABLE_NAME)
+    # パーティションキーを使ってデータを取得するクエリを作成する
+    response = dynamodb.query(
+        KeyConditionExpression='mail_address = :key_value',  # パーティションキー名は自分のテーブルのパーティションキー名に変更してね
+        ExpressionAttributeValues={
+            ':key_value': target_mail_address  # 検索したいパーティションキーの値を指定してね
+        }
+    )
+        
     return response["Items"]
 
 
@@ -26,13 +40,25 @@ def lambda_handler(event, context):
     DATE_TO_SEARCH = "2023/08/01"
     result = search_element_by_date(data["output_text"], DATE_TO_SEARCH)
     """
-    result = scan_db()
+    ALL_SCAN = False # DBの全データを読み込むならTrue, メアドで抽出するならFalse
+    result = None
+    """ ここでeventからmail_adressを受け取りたい！！！！ """"
+    # print(event["body"])
+    # print(json.loads(event["body"]))
+    # body = json.loads(event["body"])
+    # print(body["mail_address"])
+
+    if(ALL_SCAN==True):
+        result = scan_db()
+    else:
+        target_mail_address = "xx@test.com" ### <- 引っ張ってくる
+        result = scan_db_with_address(target_mail_address)
     
     # 検索結果を出力する
     if result != {}:
         print(result)
     else:
-        print("指定した日付の要素は見つかりませんでした。")
+        print("指定したメールアドレスの要素は見つかりませんでした。")
     
     return {
         'statusCode': 200,
