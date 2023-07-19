@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from "@/components/Navigation/Navigation"
-const URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 import { PostTest } from "@/components/PostTest"
+
+
+const URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
+const mail_address = "xx@test.com";
 
 export default function GetTestPage({ day = "2023-08-01" }) {
     // daily_schedulseの初期値はnull
@@ -10,9 +13,22 @@ export default function GetTestPage({ day = "2023-08-01" }) {
 
     useEffect(() => {
         const fetchData = async () => {
+
             try {
-                const response = await fetch(URL);
+                const response = await fetch(URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        mail_address: mail_address,
+                    })
+                }
+                );
                 const data = await response.json();
+                console.log("DATA");
+                console.log(data);
+                console.log("DATA____");
                 const term_id = data.output_text[0].schedule_id;
                 const days = data.output_text[0][term_id];
                 const daily_schedule = days[day];
@@ -33,7 +49,7 @@ export default function GetTestPage({ day = "2023-08-01" }) {
         <div>
             <h1>ホーム画面に統合する</h1>
             <Navigation />
-
+            {mail_address}<br />
             {daily_schedulse && Object.values(daily_schedulse).map((item) => (
                 <>
                     {item.menu} {item.start_time}~{item.end_time}({item.work_time}) Done:{item.is_done}
