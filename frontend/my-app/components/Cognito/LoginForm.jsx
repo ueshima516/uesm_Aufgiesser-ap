@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { useAuth } from '@/components/Cognito/UseAuth';
 import styles from '@/styles/LoginForm.module.css';
-import { ProvideAuth, useAuth } from '@/components/Cognito/UseAuth';
 
 const LoginForm = () => {
   const auth = useAuth();
@@ -52,6 +53,10 @@ const LoginForm = () => {
           Login
         </button>
       </form>
+      <br />
+      <Link href="/signup">
+        <button>アカウントがない場合</button>
+      </Link>
     </div>
   );
 };

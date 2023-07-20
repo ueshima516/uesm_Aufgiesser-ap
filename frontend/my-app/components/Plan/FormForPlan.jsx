@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import styles from "@/styles/FormForPlan.module.css";
 
 const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/plan_schedule";

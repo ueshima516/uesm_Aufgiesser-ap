@@ -1,6 +1,6 @@
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import Amplify from '@aws-amplify/core';
 import { Auth } from 'aws-amplify';
-import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const AwsConfigAuth = {
   region: 'ap-northeast-1',
@@ -96,7 +96,7 @@ const useProvideAuth = () => {
       await Auth.signOut();
       setUsername('');
       setIsAuthenticated(false);
-      return { success: true, message: '' };
+      return { success: true, message: 'ログアウトしました' };
     } catch (error) {
       return {
         success: false,
