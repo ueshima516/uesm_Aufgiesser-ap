@@ -3,50 +3,57 @@ import TodayDate from "./Date";
 
 import styles from '@/styles/Home.module.css';
 
+const URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
+const mail_address = "xx@test.com";
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [completedItems, setCompletedItems] = useState([]);
   const [incompleteItems, setIncompleteItems] = useState([]);
+  const [daily_schedulse, setDailySchedule] = useState(null);
+  const day = "2023-08-01";
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    try {
-      // APIレスポンスの代わりにモックデータを使用
-      const responseData = {
-        "id1": {
-          "menu": "ランニング",
-          "startTime": "19:00",
-          "endTime": "19:30"
-        },
-        "id2": {
-          "menu": "腕立て伏せ",
-          "startTime": "21:00",
-          "endTime": "21:30"
-        },
-        "id3": {
-          "menu": "ウォーキング",
-          "startTime": "07:00",
-          "endTime": "07:30"
-        }
-      };
 
-      const boxItems = Object.keys(responseData).map((id) => ({
+    try {
+      const response = await fetch(URL, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+              mail_address: mail_address,
+          })
+      }
+      );
+      const data = await response.json();
+      const term_id = data.output_text[0].schedule_id;
+      const days = data.output_text[0][term_id];
+      const daily_schedule = days[day];
+      setDailySchedule(daily_schedule);
+    
+      const boxItems = Object.keys(daily_schedule).map((id) => ({
         id,
-        menu: responseData[id].menu,
-        startTime: responseData[id].startTime,
-        endTime: responseData[id].endTime,
-        completed: false
+        menu: daily_schedule[id].menu,
+        startTime: daily_schedule[id].start_time,
+        endTime: daily_schedule[id].end_time,
+        completed: daily_schedule[id].is_done
       }));
 
+
       setData(boxItems);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+      console.log(daily_schedule);
+    } 
+    catch (error) {
+      console.error("Error fetching data:", error);
+      setDailySchedule(null); // データがない場合、nullを設定するなどエラーハンドリングを行う
     }
-  };
+  }
+
 
   const toggleCompletion = (id) => {
     const updatedData = data.map((item) => {
