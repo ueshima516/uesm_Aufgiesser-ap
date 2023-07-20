@@ -4,7 +4,7 @@ import { PostTest } from "@/components/PostTest"
 
 
 const URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
-const mail_address = "xx@test.com";
+const mail_address = "てすてす@test.com";
 
 export default function GetTestPage({ day = "2023-08-01" }) {
     // daily_schedulseの初期値はnull
@@ -29,11 +29,11 @@ export default function GetTestPage({ day = "2023-08-01" }) {
                 console.log("DATA");
                 console.log(data);
                 console.log("DATA____");
-                const term_id = data.output_text[0].schedule_id;
-                const days = data.output_text[0][term_id];
-                const daily_schedule = days[day];
-                setDailySchedule(daily_schedule);
-                console.log(daily_schedule);
+                // const term_id = data.output_text[0].schedule_id;
+                // const days = data.output_text[0][term_id];
+                // const daily_schedule = days[day];
+                // setDailySchedule(daily_schedule);
+                // console.log(daily_schedule);
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setDailySchedule(null); // データがない場合、nullを設定するなどエラーハンドリングを行う
