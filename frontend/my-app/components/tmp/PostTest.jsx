@@ -8,24 +8,24 @@ export function PostTest() {
         var form = document.getElementById('myForm');
 
         // 入力値を取得
-        var startDate = form.elements.start_date.value;
-        var endDate = form.elements.end_date.value;
-        var startTime = form.elements.start_time.value;
-        var endTime = form.elements.end_time.value;
-        var workTime = form.elements.work_time.value;
-        var menu = form.elements.menu.value;
-        var mode = form.elements.mode.value;
+        // var startDate = form.elements.start_date.value;
+        // var endDate = form.elements.end_date.value;
+        // var startTime = form.elements.start_time.value;
+        // var endTime = form.elements.end_time.value;
+        // var workTime = form.elements.work_time.value;
+        // var menu = form.elements.menu.value;
+        // var mode = form.elements.mode.value;
 
         // オブジェクトを生成
 
-        console.log(
-            startDate,
-            endDate,
-            startTime,
-            endTime,
-            workTime,
-            menu,
-            mode);
+        // console.log(
+        //     startDate,
+        //     endDate,
+        //     startTime,
+        //     endTime,
+        //     workTime,
+        //     menu,
+        //     mode);
 
         //TODO こっちだとなぜか失敗する なんで~？
         // const data = JSON.stringify({
