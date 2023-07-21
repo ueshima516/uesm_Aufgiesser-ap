@@ -40,6 +40,12 @@ function Navigation() {
 
       <span>　</span>
 
+      <Link href="/test">
+          <button className="button">API テスト</button>
+      </Link>
+
+      <span>　</span>
+
       <button onClick={executeSignOut}>ログアウト</button>
     </div>
   );

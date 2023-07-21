@@ -37,7 +37,6 @@ const FormForPlan = () => {
       });
 
       if (response.ok) {
-        console.log(response.text())
         setResponseMessage("成功しました");
       } else {
         setResponseMessage("失敗しました");

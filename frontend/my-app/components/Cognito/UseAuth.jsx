@@ -7,7 +7,7 @@ const AwsConfigAuth = {
   userPoolId: 'ap-northeast-1_ITapHFBZI',
   userPoolWebClientId: '38ptt0h32b4pcop6frkjg5ms88',
   cookieStorage: {
-    domain: 'localhost',
+    domain: 'localhost',  // 本番環境ではこれにする→ fitshow-ap.com
     path: '/',
     expires: 365,
     sameSite: 'strict',
@@ -34,17 +34,24 @@ const useProvideAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [idToken, setIdToken] = useState('');
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()
-      .then((result) => {
+      .then(async (result) => {
         setUsername(result.username);
         setIsAuthenticated(true);
+
+        const currentSession = await Auth.currentSession();
+        const currentIdToken = currentSession.getIdToken().getJwtToken();
+        setIdToken(currentIdToken);
+
         setIsLoading(false);
       })
       .catch(() => {
         setUsername('');
         setIsAuthenticated(false);
+        setIdToken('');
         setIsLoading(false);
       });
   }, []);
@@ -80,8 +87,13 @@ const useProvideAuth = () => {
   const signIn = async (username, password) => {
     try {
       const result = await Auth.signIn(username, password);
+      const currentSession = await Auth.currentSession();
+      const currentIdToken = currentSession.getIdToken().getJwtToken();
+
       setUsername(result.username);
       setIsAuthenticated(true);
+      setIdToken(currentIdToken);
+
       return { success: true, message: '' };
     } catch (error) {
       return {
@@ -109,6 +121,7 @@ const useProvideAuth = () => {
     isLoading,
     isAuthenticated,
     username,
+    idToken,
     signUp,
     confirmSignUp,
     signIn,

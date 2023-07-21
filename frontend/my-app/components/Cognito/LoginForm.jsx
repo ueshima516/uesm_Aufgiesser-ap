@@ -14,7 +14,6 @@ const LoginForm = () => {
     event.preventDefault();
     const result = await auth.signIn(username, password);
     if (result.success) {
-      console.log('ログインが成功しました');
       navigate.push('/');
     } else {
       alert(result.message);
