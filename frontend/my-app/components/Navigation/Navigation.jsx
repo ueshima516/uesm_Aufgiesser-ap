@@ -1,9 +1,20 @@
 import React from 'react';
 import Link from 'next/link';
-import HomeButton from "./HomeButton";
-
+import HomeButton from "@/components/Navigation/HomeButton";
+import { useAuth } from '@/components/Cognito/UseAuth';
 
 function Navigation() {
+  const auth = useAuth();
+
+  const executeSignOut = async () => {
+    const result = await auth.signOut();
+
+    if (result.success) {
+      alert(result.message);
+    } else {
+      alert(result.message);
+    }
+  };
 
   return (
     <div>
@@ -38,9 +49,13 @@ function Navigation() {
       </Link>
       <span>　</span>
 
-      <Link href="/login">
-        <button className="button">ログイン</button>
+      <Link href="/test">
+          <button className="button">API テスト</button>
       </Link>
+
+      <span>　</span>
+
+      <button onClick={executeSignOut}>ログアウト</button>
     </div>
   );
 }
