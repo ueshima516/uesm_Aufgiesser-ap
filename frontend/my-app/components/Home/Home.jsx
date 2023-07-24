@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TodayDate from "./Date";
-
 import styles from '@/styles/Home.module.css';
-
 
 const Home = () => {
   const [data, setData] = useState([]);

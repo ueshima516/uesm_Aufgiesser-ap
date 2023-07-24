@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
-
 import 'react-calendar/dist/Calendar.css';
 
 function MyCalendar() {
@@ -17,6 +16,7 @@ function MyCalendar() {
         <Calendar
           value={date}
           onChange={handleDateChange}
+          locale="ja-JP"
         />
       </div>
     </div>

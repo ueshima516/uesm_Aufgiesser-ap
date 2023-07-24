@@ -3,7 +3,6 @@ import Image from 'next/image'
 
 import homeIcon from '@/public/images/home-icon.png';
 
-
 const HomeButton = () => {
   return (
     <button>
