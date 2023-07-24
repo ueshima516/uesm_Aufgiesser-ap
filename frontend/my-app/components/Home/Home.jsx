@@ -2,105 +2,140 @@ import React, { useEffect, useState } from 'react';
 import TodayDate from "./Date";
 import styles from '@/styles/Home.module.css';
 
+//? 期ごとの予定 =｢plan｣>日ごとの予定｢schedule｣ 的なつもりで命名してる？いや、そんな事もなさそうだな…
+const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
+const URL_UPDATE = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/update_schedule"
+
+// // TODO 本日の日付取得 これを変数として代入すること
+// // ? 日付が変わったら自動でリロードとかもありかもね
+//   const today = new Date();
+// const year = today.getFullYear();
+// const month = String(today.getMonth() + 1).padStart(2, '0'); // 月は0-indexedなので+1する
+// const d = String(today.getDate()).padStart(2, '0');
+// const date_ = `${year}-${month}-${d}`;
+// console.log(date_); //"2023-07-20"形式で
+const day = "2023-08-01";
+// TODO メアドも変数にして変えられる様にすること
+const mail_address = "てすてす@test.com";
+
 const Home = () => {
-  const [data, setData] = useState([]);
-  const [completedItems, setCompletedItems] = useState([]);
-  const [incompleteItems, setIncompleteItems] = useState([]);
+	const [completedMenus, setCompletedMenus] = useState([]);
+	const [incompleteMenus, setIncompleteMenus] = useState([]);
+	const [menus, setMenus] = useState([]);
+	const [scheduleID, setScheduleID] = useState(null);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+	// わざわざ外側でLoadDataって別関数として定義してるのは、UseEffect内以外からも呼び出したいからだよ～
+	useEffect(() => {
+		LoadData();
+	}, []);
 
-  const fetchData = async () => {
-    try {
-      // APIレスポンスの代わりにモックデータを使用
-      const responseData = {
-        "id1": {
-          "menu": "ランニング",
-          "startTime": "19:00",
-          "endTime": "19:30"
-        },
-        "id2": {
-          "menu": "腕立て伏せ",
-          "startTime": "21:00",
-          "endTime": "21:30"
-        },
-        "id3": {
-          "menu": "ウォーキング",
-          "startTime": "07:00",
-          "endTime": "07:30"
-        }
-      };
+	// APIからスケジュールを受信して、daySchedulesを更新する
+	const LoadData = async () => {
+		try {
+			const response = await fetch(URL_LOAD, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					mail_address: mail_address,
+				})
+			}
+			);
+			const data = await response.json();
+			setMenus(data);
+			// console.log(data);
+			const menus = data.output_text[0][day];
+			setScheduleID(data.output_text[0]["schedule_id"]);
+			setMenus(menus);
+			// console.log(daily_schedules);
 
-      const boxItems = Object.keys(responseData).map((id) => ({
-        id,
-        menu: responseData[id].menu,
-        startTime: responseData[id].startTime,
-        endTime: responseData[id].endTime,
-        completed: false
-      }));
+		}
+		catch (error) {
+			console.error("Error Fetching data:", error);
+			setMenus(null); // データがない場合、nullを設定するなどエラーハンドリングを行う
+			setScheduleID(null);
 
-      setData(boxItems);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+		}
+	}
 
-  const toggleCompletion = (id) => {
-    const updatedData = data.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          completed: !item.completed
-        };
-      }
-      return item;
-    });
+	// 達成状態をトグルする
+	const toggleCompletion = async (menu_UUID) => {
+		// console.log(schedule_id);
+		try {
+			const response = await fetch(URL_UPDATE, { // DBに更新要求
 
-    setData(updatedData);
-  };
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					mail_address: mail_address,
+					schedule_id: scheduleID,
+					target_date: day,
+					UUID: menu_UUID,
+				})
+			}
+			);
+			const data = await response.json();
+			// console.log("POST RES");
+			// console.log(data);
+			// console.log("POST RES");
+			LoadData(); // DBから再度予定を受信
 
-  useEffect(() => {
-    const completed = data.filter((item) => item.completed);
-    const incomplete = data.filter((item) => !item.completed);
+		}
+		catch (error) {
+			console.error("Error Updating data:", error);
+		}
+	}
 
-    setCompletedItems(completed);
-    setIncompleteItems(incomplete);
-  }, [data]);
+	// daySchedulesが更新されると自動実行
+	useEffect(() => {
+		CheckCompletion();
+	}, [menus]);
 
-  const formatTimeRange = (startTime, endTime) => {
-    return `${startTime} ~ ${endTime}`;
-  };
+	const CheckCompletion = () => {
+		const completed = menus.filter((menu) => menu.is_done);
+		const incomplete = menus.filter((menu) => !menu.is_done);
+		// console.log(completed);
+		// console.log(incomplete);
+		setCompletedMenus(completed);
+		setIncompleteMenus(incomplete);
+	}
 
-  return (
-    <div>
-      <h2>本日の予定</h2>
-      <TodayDate />
-      <div>
-        <h2>未達成</h2>
-        {incompleteItems.map((item) => (
-          <div key={item.id} className={styles.listContainer}>
-            <p className={styles.box}>
-              {item.menu}: {formatTimeRange(item.startTime, item.endTime)}
-            </p>
-            <button className={styles.button} onClick={() => toggleCompletion(item.id)}>未達成</button>
-          </div>
-        ))}
-      </div>
+	const formatTimeRange = (start_time, end_time) => {
+		return `${start_time} ~ ${end_time}`;
+	};
 
-      <div>
-        <h2>達成</h2>
-        {completedItems.map((item) => (
-          <div key={item.id} className={styles.listContainer}>
-            <p className={`${styles.box} ${styles.completed}`}>
-              {item.menu}: {formatTimeRange(item.startTime, item.endTime)}
-            </p>
-            <button className={styles.button} onClick={() => toggleCompletion(item.id)}>達成</button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+	return (
+		<div>
+			<h2>本日の予定</h2>
+			<TodayDate />
+			<div>
+				<h2>未達成</h2>
+				{incompleteMenus.map((menu) => (
+					<div key={menu.UUID} className={styles.listContainer}>
+						<p className={styles.box}>
+							{menu.menu}: {formatTimeRange(menu.start_time, menu.end_time)}
+						</p>
+						<button className={styles.button} onClick={() => toggleCompletion(menu.UUID)}>未達成</button>
+					</div>
+				))}
+			</div>
+
+			<div>
+				<h2>達成</h2>
+				{completedMenus.map((menu) => (
+					<div key={menu.UUID} className={styles.listContainer}>
+						<p className={`${styles.box} ${styles.completed}`}>
+							{menu.menu}: {formatTimeRange(menu.start_time, menu.end_time)}
+						</p>
+						<button className={styles.button} onClick={() => toggleCompletion(menu.UUID)}>達成</button>
+					</div>
+				))}
+			</div>
+		</div>
+	);
 };
 
 export default Home;
