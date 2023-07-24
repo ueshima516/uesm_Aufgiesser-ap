@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import TodayDate from "./Date";
+import { useAuth } from "@/components/Cognito/UseAuth";
+import TodayDate, { formattedDateString } from "./Date";
 import styles from '@/styles/Home.module.css';
 
 //? 期ごとの予定 =｢plan｣>日ごとの予定｢schedule｣ 的なつもりで命名してる？いや、そんな事もなさそうだな…
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 const URL_UPDATE = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/update_schedule"
 
-// // TODO 本日の日付取得 これを変数として代入すること
-// // ? 日付が変わったら自動でリロードとかもありかもね
-//   const today = new Date();
-// const year = today.getFullYear();
-// const month = String(today.getMonth() + 1).padStart(2, '0'); // 月は0-indexedなので+1する
-// const d = String(today.getDate()).padStart(2, '0');
-// const date_ = `${year}-${month}-${d}`;
-// console.log(date_); //"2023-07-20"形式で
-const day = "2023-08-01";
-// TODO メアドも変数にして変えられる様にすること
-const mail_address = "てすてす@test.com";
+
+const day = formattedDateString;
 
 const Home = () => {
 	const [completedMenus, setCompletedMenus] = useState([]);
 	const [incompleteMenus, setIncompleteMenus] = useState([]);
 	const [menus, setMenus] = useState([]);
 	const [scheduleID, setScheduleID] = useState(null);
+
+	const { idToken } = useAuth();
+	const { username } = useAuth();
+	const mail_address = username;
+
 
 	// わざわざ外側でLoadDataって別関数として定義してるのは、UseEffect内以外からも呼び出したいからだよ～
 	useEffect(() => {
@@ -35,7 +32,8 @@ const Home = () => {
 			const response = await fetch(URL_LOAD, {
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+					"Authorization": idToken,
 				},
 				body: JSON.stringify({
 					mail_address: mail_address,
@@ -43,17 +41,16 @@ const Home = () => {
 			}
 			);
 			const data = await response.json();
-			setMenus(data);
-			// console.log(data);
-			const menus = data.output_text[0][day];
 			setScheduleID(data.output_text[0]["schedule_id"]);
-			setMenus(menus);
-			// console.log(daily_schedules);
-
+			if (Object.keys(data.output_text[0]).includes(day)) {
+				setMenus(data.output_text[0][day]);
+			} else {
+				setMenus([]);
+			};
 		}
 		catch (error) {
-			console.error("Error Fetching data:", error);
-			setMenus(null); // データがない場合、nullを設定するなどエラーハンドリングを行う
+			console.error("Error Fetching Schedule data:", error);
+			setMenus([]); // データがない場合、nullを設定するなどエラーハンドリングを行う
 			setScheduleID(null);
 
 		}
@@ -67,7 +64,8 @@ const Home = () => {
 
 				method: "POST",
 				headers: {
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+					"Authorization": idToken,
 				},
 				body: JSON.stringify({
 					mail_address: mail_address,

@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import { useAuth } from "@/components/Cognito/UseAuth";
 import styles from "@/styles/FormForPlan.module.css";
 
 const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/plan_schedule";
 
 const FormForPlan = () => {
+  const { idToken } = useAuth();
+  const { username } = useAuth();
+	const mail_address = username;
+
   const [formData, setFormData] = useState({
     start_date: "",
     end_date: "",
@@ -12,6 +17,7 @@ const FormForPlan = () => {
     work_time: "",
     menu: "",
     mode: "EASY",
+    mail_address: mail_address,
   });
   const [responseMessage, setResponseMessage] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -33,6 +39,7 @@ const FormForPlan = () => {
         body: JSON.stringify(formData),
         headers: {
           "Content-Type": "application/json",
+          "Authorization": idToken,
         },
       });
 
