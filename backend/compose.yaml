@@ -1,0 +1,7 @@
+version: '3'
+services:
+  python:
+    build: .
+    tty: true
+    volumes:
+      - .:/backend

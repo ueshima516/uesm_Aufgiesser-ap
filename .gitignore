@@ -1,2 +1,4 @@
-/*study*
 .DS_Store
+.vscode/*
+
+/tmp/*
