@@ -41,6 +41,7 @@ const Home = () => {
 			}
 			);
 			const data = await response.json();
+			console.log(data);
 			setScheduleID(data.output_text[0]["schedule_id"]);
 			if (Object.keys(data.output_text[0]).includes(day)) {
 				setMenus(data.output_text[0][day]);
