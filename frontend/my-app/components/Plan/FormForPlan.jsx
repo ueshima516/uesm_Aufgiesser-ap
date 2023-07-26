@@ -7,17 +7,14 @@ const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaw
 const FormForPlan = () => {
   const { idToken } = useAuth();
   const { username } = useAuth();
-	const mail_address = username;
 
   const [formData, setFormData] = useState({
     start_date: "",
     end_date: "",
     start_time: "",
-    end_time: "",
-    work_time: "",
     menu: "",
     mode: "EASY",
-    mail_address: mail_address,
+    username: username,
   });
   const [responseMessage, setResponseMessage] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -68,7 +65,7 @@ const FormForPlan = () => {
           className={styles.input}
         />
       </label>
-      <br />
+      <span> </span>
       <label className={styles.label}>
         End Date:
         <input
@@ -90,39 +87,22 @@ const FormForPlan = () => {
           className={styles.input}
         />
       </label>
-      <br />
-      <label className={styles.label}>
-        End Time:
-        <input
-          type="time"
-          name="end_time"
-          value={formData.end_time}
-          onChange={handleChange}
-          className={styles.input}
-        />
-      </label>
-      <br />
-      <label className={styles.label}>
-        Work Time:
-        <input
-          type="number"
-          name="work_time"
-          value={formData.work_time}
-          onChange={handleChange}
-          className={styles.input}
-        />
-      </label>
+
       <br />
       <label className={styles.label}>
         Menu:
-        <input
-          type="text"
+        <select
           name="menu"
           value={formData.menu}
           onChange={handleChange}
-          className={styles.input}
-        />
+          className={styles.select}
+        >
+          <option value="RUNNIG">ランニング</option>
+          <option value="MUSCLE">筋トレ</option>
+          <option value="RUNNING_MUSCLE">ランニング＋筋トレ</option>
+        </select>
       </label>
+
       <br />
       <label className={styles.label}>
         Mode:
