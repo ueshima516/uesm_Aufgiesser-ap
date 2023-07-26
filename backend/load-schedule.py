@@ -3,8 +3,7 @@ import boto3
 
 # 後々 data は DBから読み込めるようにする
 data = {"output_text": {"b25f387c-2155-11ee-b258-825e158fd254": {"date": "2023/08/01", "start_time": "10:00", "end_time": "11:30", "work_time": "30", "menu": "running"}, "b25f3ac0-2155-11ee-b258-825e158fd254": {"date": "2023/08/05", "start_time": "10:00", "end_time": "11:30", "work_time": "30", "menu": "running"}, "b25f3bba-2155-11ee-b258-825e158fd254": {"date": "2023/08/08", "start_time": "10:00", "end_time": "11:30", "work_time": "30", "menu": "running"}, "b25f3c96-2155-11ee-b258-825e158fd254": {"date": "2023/08/12", "start_time": "10:00", "end_time": "11:30", "work_time": "30", "menu": "running"}, "b25f3d5e-2155-11ee-b258-825e158fd254": {"date": "2023/08/15", "start_time": "10:00", "end_time": "11:30", "work_time": "30", "menu": "running"}}}
-TABLE_NAME = "fitshow_dev"
-TABLE_NAME = "yu-test-db"
+TABLE_NAME = "fitshow_schedule"
 
 
 

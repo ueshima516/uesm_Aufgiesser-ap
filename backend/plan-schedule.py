@@ -1,7 +1,7 @@
 import json
 import boto3
 import datetime
-TABLE_NAME='yu-test-db'
+TABLE_NAME='fitshow_schedule'
 # DynamoDBに接続
 dynamodb = boto3.resource('dynamodb', region_name='ap-northeast-1').Table(TABLE_NAME)
 

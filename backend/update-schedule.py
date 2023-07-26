@@ -1,6 +1,6 @@
 import json
 import boto3
-TABLE_NAME='yu-test-db'
+TABLE_NAME='fitshow_schedule'
 
 
 def Get(username, date, target_menu): # 今の状態から反転させるコード
