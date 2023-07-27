@@ -7,18 +7,24 @@ import styles from '@/styles/Home.module.css';
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 const URL_UPDATE = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/update_schedule"
 
-
-const day = formattedDateString;
+// Date()で取得した日付を"20230726"フォーマットの文字列に整形する関数
+const GetDateString = (dateObj) => {
+	const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' };
+	const formattedDate = dateObj.toLocaleDateString('ja-JP', options).replace(/\//g, '');
+	return formattedDate;
+}
+// const day = formattedDateString;
+// const day = "20220801"
+const day = GetDateString(new Date());
 
 const Home = () => {
 	const [completedMenus, setCompletedMenus] = useState([]);
 	const [incompleteMenus, setIncompleteMenus] = useState([]);
 	const [menus, setMenus] = useState([]);
-	const [scheduleID, setScheduleID] = useState(null);
 
 	const { idToken } = useAuth();
 	const { username } = useAuth();
-	const mail_address = username;
+
 
 
 	// わざわざ外側でLoadDataって別関数として定義してるのは、UseEffect内以外からも呼び出したいからだよ～
@@ -36,14 +42,18 @@ const Home = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					mail_address: mail_address,
+					username: username,
 				})
 			}
 			);
 			const data = await response.json();
-			setScheduleID(data.output_text[0]["schedule_id"]);
-			if (Object.keys(data.output_text[0]).includes(day)) {
-				setMenus(data.output_text[0][day]);
+
+			
+			const result = data.output_text.find(item => item.date === day) || null;
+
+			if (result !== null){
+				setMenus(result["menu_list"]);
+
 			} else {
 				setMenus([]);
 			};
@@ -51,14 +61,12 @@ const Home = () => {
 		catch (error) {
 			console.error("Error Fetching Schedule data:", error);
 			setMenus([]); // データがない場合、nullを設定するなどエラーハンドリングを行う
-			setScheduleID(null);
 
 		}
 	}
 
 	// 達成状態をトグルする
-	const toggleCompletion = async (menu_UUID) => {
-		// console.log(schedule_id);
+	const toggleCompletion = async (menu) => {
 		try {
 			const response = await fetch(URL_UPDATE, { // DBに更新要求
 
@@ -68,17 +76,13 @@ const Home = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					mail_address: mail_address,
-					schedule_id: scheduleID,
-					target_date: day,
-					UUID: menu_UUID,
+					username: username,
+					date: day,
+					menu: menu,
 				})
 			}
 			);
 			const data = await response.json();
-			// console.log("POST RES");
-			// console.log(data);
-			// console.log("POST RES");
 			LoadData(); // DBから再度予定を受信
 
 		}
@@ -95,8 +99,6 @@ const Home = () => {
 	const CheckCompletion = () => {
 		const completed = menus.filter((menu) => menu.is_done);
 		const incomplete = menus.filter((menu) => !menu.is_done);
-		// console.log(completed);
-		// console.log(incomplete);
 		setCompletedMenus(completed);
 		setIncompleteMenus(incomplete);
 	}
@@ -112,11 +114,11 @@ const Home = () => {
 			<div>
 				<h2>未達成</h2>
 				{incompleteMenus.map((menu) => (
-					<div key={menu.UUID} className={styles.listContainer}>
+					<div key={menu.menu} className={styles.listContainer}>
 						<p className={styles.box}>
-							{menu.menu}: {formatTimeRange(menu.start_time, menu.end_time)}
+							{menu.menu}: {menu.intensity}
 						</p>
-						<button className={styles.button} onClick={() => toggleCompletion(menu.UUID)}>未達成</button>
+						<button className={styles.button} onClick={() => toggleCompletion(menu.menu)}>未達成</button>
 					</div>
 				))}
 			</div>
@@ -124,11 +126,11 @@ const Home = () => {
 			<div>
 				<h2>達成</h2>
 				{completedMenus.map((menu) => (
-					<div key={menu.UUID} className={styles.listContainer}>
+					<div key={menu.menu} className={styles.listContainer}>
 						<p className={`${styles.box} ${styles.completed}`}>
-							{menu.menu}: {formatTimeRange(menu.start_time, menu.end_time)}
+							{menu.menu}: {menu.intensity}
 						</p>
-						<button className={styles.button} onClick={() => toggleCompletion(menu.UUID)}>達成</button>
+						<button className={styles.button} onClick={() => toggleCompletion(menu.menu)}>達成</button>
 					</div>
 				))}
 			</div>
