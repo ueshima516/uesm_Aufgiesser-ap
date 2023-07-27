@@ -36,8 +36,6 @@ function Navigation() {
       </Link>
       <span>　</span>
 
-      <span>　</span>
-
       <button onClick={executeSignOut}>ログアウト</button>
     </div>
   );
