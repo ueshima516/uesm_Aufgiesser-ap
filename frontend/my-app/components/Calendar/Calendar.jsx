@@ -29,19 +29,15 @@ const GetDateString = (dateObj) => {
   return formattedDate;
 }
 
-
-
-// Date()で取得した日付を"2023-07-26"フォーマットの文字列に整形する関数
-const GetDateString_2 = (dateObj) => {
+const GetDateString2 = (dateObj) => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' };
   const formattedDate = dateObj.toLocaleDateString('ja-JP', options).replace(/\//g, '');
   return formattedDate;
 }
 
 
-
 function MyCalendar() {
-  const today = GetDateString_2(new Date());
+  const today = GetDateString(new Date());
 
   const [date, setDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,44 +49,24 @@ function MyCalendar() {
     setDate(value);
   };
 
-
   const tileContent = ({ date }) => {
 
     // console.log(data.output_text[0].username);
 
-
-
+    let menus_today = data.output_text.filter((dat) => (dat.date == GetDateString2(date)));
     let menu_names = ""
-    let menus_today = data.output_text.filter((set) => set.date == GetDateString_2(date))[0];
-
-    
-    if (menus_today != undefined) {
-      menu_names = menus_today.menu_list.map((menu) => (menu.menu));
+    if (menus_today.length > 0) {
+      menus_today = menus_today[0].menu_list
+      menu_names = menus_today.map((menu) => (menu.menu));
     }
-   
 
-    const formattedDate = GetDateString_2(date);
-    const days_2 = data.output_text.map((arc) => (arc.date));
-
-    return days_2.includes(formattedDate) ?
-      <div>{menu_names.map((name) => (<Image src={icons[name]} width={15} height={15} alt="予定あり" />))}
-
+    const formattedDate = GetDateString(date);
+    return menus_today.length > 0 ?
+      <div>
+        {menu_names.map((name) => (<Image src={icons[name]} width={15} height={15} alt="予定あり" />))}
       </div>
       : null;
-  }
-
-
-  useEffect(() => {
-    const menus_today = schedule.filter((sch) => sch.date == dateToShow)[0];
-    if (menus_today == undefined) {
-      setMenus([]);
-    }
-    else {
-      setMenus(menus_today.menus)
-    }
-    // console.log(menus);
-  }, [dateToShow]);
-
+  };
 
   useEffect(() => {
     let menus_today = data.output_text.filter((dat) => (dat.date == GetDateString2(date)));
@@ -106,7 +82,6 @@ function MyCalendar() {
 
   const openModal = (date) => {
     console.log(date);
-
     setDateToShow(date);
     setIsModalOpen(true);
 
@@ -125,7 +100,6 @@ function MyCalendar() {
 
     return (
       <>
-
         <h3>{GetDateString(dateToShow)} の予定</h3>
 
 
@@ -136,7 +110,6 @@ function MyCalendar() {
               {item.menu}: {item.intensity}
             </p>
             <button className={styles.button} >{item.is_done ? "true" : "false"}</button>
-
           </div>
         ))}
 
@@ -155,9 +128,7 @@ function MyCalendar() {
           onChange={handleDateChange}
           locale="ja-JP"
           tileContent={tileContent}
-
           onClickDay={(value, event) => openModal(value)} // Pass the formatted date
-
         />
       </div>
       <Modal
