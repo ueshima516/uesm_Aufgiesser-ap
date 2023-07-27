@@ -7,9 +7,15 @@ import styles from '@/styles/Home.module.css';
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 const URL_UPDATE = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/update_schedule"
 
-
+// Date()で取得した日付を"20230726"フォーマットの文字列に整形する関数
+const GetDateString = (dateObj) => {
+	const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' };
+	const formattedDate = dateObj.toLocaleDateString('ja-JP', options).replace(/\//g, '');
+	return formattedDate;
+}
 // const day = formattedDateString;
-const day = "20220801"
+// const day = "20220801"
+const day = GetDateString(new Date());
 
 const Home = () => {
 	const [completedMenus, setCompletedMenus] = useState([]);
