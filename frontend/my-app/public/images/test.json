@@ -1,0 +1,42 @@
+{
+    "output_text": [
+        {
+            "menu_list": [
+                {
+                    "intensity": "15分",
+                    "menu": "RUNNING",
+                    "is_done": true
+                },
+                {
+                    "intensity": "15分",
+                    "menu": "SWIMMING",
+                    "is_done": false
+                }
+            ],
+            "username": "ふわぽめ",
+            "date": "20230701"
+        },
+        {
+            "menu_list": [
+                {
+                    "intensity": "15分",
+                    "menu": "RUNNING",
+                    "is_done": false
+                }
+            ],
+            "username": "ふわぽめ",
+            "date": "20230905"
+        },
+        {
+            "menu_list": [
+                {
+                    "intensity": "15分",
+                    "menu": "RUNNING",
+                    "is_done": false
+                }
+            ],
+            "username": "ふわぽめ",
+            "date": "20230908"
+        }
+    ]
+}
