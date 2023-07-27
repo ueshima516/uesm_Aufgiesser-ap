@@ -49,7 +49,7 @@ INTENSITY = {
 
 
 def lambda_handler(event, context):
-  DEBUG = True
+  DEBUG = False
   if(DEBUG==False):
     body = json.loads(event["body"])
     start_date = body["start_date"]
@@ -69,6 +69,14 @@ def lambda_handler(event, context):
   
   plan_schedule(username, start_date, end_date, start_time, menu, mode)
   
+  return {
+      'statusCode': 200,
+      'body': json.dumps({"output_text": ""}),
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
+  }
+
 
 def plan_schedule(username, start_date, end_date, start_time, menu, mode):
   dic = {}
@@ -99,7 +107,7 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
         schedule.append(sch_)
 
     tar_date_key = tar_date.strftime('%Y%m%d')
-    schedule_res = {"username": username, "date": tar_date_key, "menu_list": schedule}
+    schedule_res = {"username": username, "date": tar_date_key, "mode": mode, "menu_list": schedule}
     
     if(schedule != []):
       print(schedule_res)
