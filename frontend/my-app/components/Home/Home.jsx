@@ -41,11 +41,13 @@ const Home = () => {
 			}
 			);
 			const data = await response.json();
+
 			
 			const result = data.output_text.find(item => item.date === day) || null;
 
 			if (result !== null){
 				setMenus(result["menu_list"]);
+
 			} else {
 				setMenus([]);
 			};
