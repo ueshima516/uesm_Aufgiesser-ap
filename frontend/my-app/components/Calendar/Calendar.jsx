@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from '@/styles/Home.module.css';
+import { useAuth } from "@/components/Cognito/UseAuth";
 
 import Image from 'next/image';
 import Modal from 'react-modal';
@@ -10,72 +11,96 @@ import Modal from 'react-modal';
 import scheduleIcon1 from '@/public/images/running.png';
 import scheduleIcon2 from '@/public/images/muscle.png';
 
-import data from '@/public/test.json';
-
+const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 
 
 const icons = {
   "RUNNING": scheduleIcon1,
-  "pushup": scheduleIcon2,
-  "squat": scheduleIcon2,
-  "sit up": scheduleIcon2
+  "PUSHUP": scheduleIcon2,
+  "SQUAT": scheduleIcon2,
+  "SITUP": scheduleIcon2
 }
-  
 
-// Date()で取得した日付を"2023-07-26"フォーマットの文字列に整形する関数
+
+// Date()で取得した日付を"20230726"フォーマットの文字列に整形する関数
 const GetDateString = (dateObj) => {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' };
-  const formattedDate = dateObj.toLocaleDateString('ja-JP', options).replace(/\//g, '-');
-  return formattedDate;
-}
-
-const GetDateString2 = (dateObj) => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' };
   const formattedDate = dateObj.toLocaleDateString('ja-JP', options).replace(/\//g, '');
   return formattedDate;
 }
 
-
 function MyCalendar() {
-  const today = GetDateString(new Date());
-
+  const [dataOutputText, setDataOutputText] = useState([]);
   const [date, setDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [dateToShow, setDateToShow] = useState(today);
-  const [menus, setMenus] = useState([]);
+  const [dateToShow, setDateToShow] = useState(new Date());
+  const [menusToday, setMenusToday] = useState([]);
+
+  const { idToken } = useAuth();
+  const { username } = useAuth();
+
+  // わざわざ外側でLoadDataって別関数として定義してるのは、UseEffect内以外からも呼び出したいからだよ～
+  useEffect(() => {
+    LoadData();
+  }, []);
+
+  // APIからスケジュールを受信して、daySchedulesを更新する
+  const LoadData = async () => {
+    try {
+      const response = await fetch(URL_LOAD, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": idToken,
+        },
+        body: JSON.stringify({
+          username: username,
+        })
+      }
+      );
+      const dat = await response.json();
+      // console.log(dat);
+
+      setDataOutputText(dat.output_text);
+    }
+    catch (error) {
+      console.error("Error Fetching Schedule data:", error);
+      setDataOutputText([]); // データがない場合、nullを設定するなどエラーハンドリングを行う
+
+    }
+  }
+
+
 
   const handleDateChange = (value) => {
     setDate(value);
   };
 
   const tileContent = ({ date }) => {
-
-    // console.log(data.output_text[0].username);
-
-    let menus_today = data.output_text.filter((dat) => (dat.date == GetDateString2(date)));
+    // console.log(dataOutputText[0].username);
+    let menus_today = dataOutputText.filter((dat) => (dat.date == GetDateString(date)));
     let menu_names = ""
     if (menus_today.length > 0) {
       menus_today = menus_today[0].menu_list
       menu_names = menus_today.map((menu) => (menu.menu));
     }
 
-    const formattedDate = GetDateString(date);
     return menus_today.length > 0 ?
       <div>
-        {menu_names.map((name) => (<Image src={icons[name]} width={15} height={15} alt="予定あり" />))}
+        {menu_names.map((name, index) => (<Image key={index} src={icons[name]} width={15} height={15} alt={name} />))}
       </div>
       : null;
   };
 
   useEffect(() => {
-    let menus_today = data.output_text.filter((dat) => (dat.date == GetDateString2(date)));
+    let menus_today = dataOutputText.filter((dat) => (dat.date == GetDateString(date)));
     if (menus_today.length > 0) {
       menus_today = menus_today[0].menu_list;
-      setMenus(menus_today);
+      setMenusToday(menus_today);
     }
     else {
-      setMenus([])
+      setMenusToday([])
     }
     console.log(menus_today);
   }, [dateToShow]);
@@ -92,19 +117,11 @@ function MyCalendar() {
   };
 
   const ModalContents = () => {
-
-
-    // console.log(menus_today);
-
-
-
     return (
       <>
         <h3>{GetDateString(dateToShow)} の予定</h3>
 
-
-
-        {menus.map((item) => (
+        {menusToday.map((item) => (
           <div key={item.menu} className={styles.listContainer}>
             <p className={styles.box}>
               {item.menu}: {item.intensity}
