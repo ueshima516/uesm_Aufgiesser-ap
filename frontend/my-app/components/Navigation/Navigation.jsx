@@ -36,6 +36,11 @@ function Navigation() {
       </Link>
       <span>　</span>
 
+      <Link href="/analysis">
+        <button className="button">分析</button>
+      </Link>
+      <span>　</span>
+
       <button onClick={executeSignOut}>ログアウト</button>
     </div>
   );
