@@ -21,19 +21,6 @@ function Navigation() {
       {/* <h1>FitShow</h1> */}
       <h1 style={{ color: '#33CC66', fontFamily: 'Arial, sans-serif', fontSize: '36px' }}>FitShow</h1>
 
-
-      {/* TODO: Delete this */}
-      <Link href="/tmp/test">
-        <button className="button">Test Something</button>
-      </Link>
-      <span>　</span>
-
-      {/* <Link href="/api/test">
-        <button className="button">api/test</button>
-      </Link>
-      <span>　</span> */}
-
-
       <Link href="/">
         <HomeButton />
       </Link>
@@ -48,10 +35,6 @@ function Navigation() {
         <button className="button">カレンダー</button>
       </Link>
       <span>　</span>
-
-      <Link href="/test">
-          <button className="button">API テスト</button>
-      </Link>
 
       <span>　</span>
 

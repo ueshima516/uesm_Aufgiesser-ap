@@ -88,7 +88,7 @@ function MyCalendar() {
 
     return menus_today.length > 0 ?
       <div>
-        {menu_names.map((name) => (<Image src={icons[name]} width={15} height={15} alt={name} />))}
+        {menu_names.map((name, index) => (<Image key={index} src={icons[name]} width={15} height={15} alt={name} />))}
       </div>
       : null;
   };
