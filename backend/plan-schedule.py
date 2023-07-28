@@ -49,7 +49,7 @@ INTENSITY = {
 
 
 def lambda_handler(event, context):
-  DEBUG = True
+  DEBUG = False
   if(DEBUG==False):
     body = json.loads(event["body"])
     start_date = body["start_date"]
@@ -69,6 +69,14 @@ def lambda_handler(event, context):
   
   plan_schedule(username, start_date, end_date, start_time, menu, mode)
   
+  return {
+      'statusCode': 200,
+      'body': json.dumps({"output_text": ""}),
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
+  }
+
 
 def plan_schedule(username, start_date, end_date, start_time, menu, mode):
   dic = {}
@@ -77,9 +85,11 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
     dic.update({"RUNNING": FREQ["RUNNING"]["ONLY"][mode]})
   elif(menu=="MUSCLE"):
     dic.update(FREQ["MUSCLE"]["ONLY"])
-  else:
+  elif(menu=="RUNNING_MUSCLE"):
     dic.update({"RUNNING": FREQ["RUNNING"]["WITH"][mode]})
     dic.update(FREQ["MUSCLE"]["WITH"])
+  else:
+    raise ValueError(menu, "is not defined")
   print(dic)
 
   delta = (end_date - start_date).days + 1
