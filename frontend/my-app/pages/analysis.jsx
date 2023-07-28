@@ -3,6 +3,7 @@
 import React from "react";
 import { useAuth } from "@/components/Cognito/UseAuth";
 import Navigation from "@/components/Navigation/Navigation"
+import WeeklyAchievement from "@/components/Analysis/WeeklyAchievement"
 import Home from "@/components/Home/Home";
 import PrivateRoute from "@/components/Cognito/PrivateRoute";
 
@@ -15,6 +16,7 @@ export default function HomePage () {
     <PrivateRoute>
       <Navigation />
       <h1>分析画面</h1>
+      <WeeklyAchievement />
     </PrivateRoute>
   );
 };

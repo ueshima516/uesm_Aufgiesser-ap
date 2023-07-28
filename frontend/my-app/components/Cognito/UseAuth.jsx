@@ -7,7 +7,7 @@ const AwsConfigAuth = {
   userPoolId: 'ap-northeast-1_ITapHFBZI',
   userPoolWebClientId: '38ptt0h32b4pcop6frkjg5ms88',
   cookieStorage: {
-    domain: 'fitshow-ap.com',  // 本番環境ではこれにする→ fitshow-ap.com
+    domain: 'localhost',  // 本番環境ではこれにする→ fitshow-ap.com
     path: '/',
     expires: 365,
     sameSite: 'strict',

@@ -60,7 +60,9 @@ function MyCalendar() {
       }
       );
       const dat = await response.json();
+      // console.log("--------")
       // console.log(dat);
+      // console.log("--------")
 
       setDataOutputText(dat.output_text);
     }
