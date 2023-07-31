@@ -108,8 +108,9 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
         sch_ = {"intensity": intensity, "is_done": False, "menu": menu_}
         schedule.append(sch_)
 
+
     tar_date_key = tar_date.strftime('%Y%m%d')
-    schedule_res = {"username": username, "date": tar_date_key, "mode": mode, "menu_list": schedule}
+    schedule_res = {"username": username, "date": tar_date_key, "start_time": start_time, "mode": mode, "menu_list": schedule}
     
     if(schedule != []):
       print(schedule_res)
