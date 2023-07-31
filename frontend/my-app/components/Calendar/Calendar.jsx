@@ -36,6 +36,7 @@ function MyCalendar() {
 
   const [dateToShow, setDateToShow] = useState(new Date());
   const [menusToday, setMenusToday] = useState([]);
+  const [startTime, setStartTime] = useState([])
 
   const { idToken } = useAuth();
   const { username } = useAuth();
@@ -65,6 +66,7 @@ function MyCalendar() {
       // console.log("--------")
 
       setDataOutputText(dat.output_text);
+
     }
     catch (error) {
       console.error("Error Fetching Schedule data:", error);
@@ -107,12 +109,18 @@ function MyCalendar() {
 
   useEffect(() => {
     let menus_today = dataOutputText.filter((dat) => (dat.date == GetDateString(date)));
+
     if (menus_today.length > 0) {
+      const menu_start_time = menus_today[0].start_time;
       menus_today = menus_today[0].menu_list;
+
       setMenusToday(menus_today);
+      setStartTime(menu_start_time+"から")
+      // console.log(startTime)
     }
     else {
       setMenusToday([])
+      setStartTime([])
     }
     console.log(menus_today);
   }, [dateToShow]);
@@ -131,14 +139,14 @@ function MyCalendar() {
   const ModalContents = () => {
     return (
       <>
-        <h3>{GetDateString(dateToShow)} の予定</h3>
+        <h3>{GetDateString(dateToShow)} {startTime}の予定</h3>
 
         {menusToday.map((item) => (
           <div key={item.menu} className={styles.listContainer}>
             <p className={styles.box}>
-              {item.menu}: {item.intensity}
+              {item.menu}: {item.intensity} {item.menu!=="RUNNING" ? "× 3セット" : ""}
             </p>
-            <button className={styles.button} >{item.is_done ? "true" : "false"}</button>
+            <button className={styles.button} >{item.is_done ? "達成" : "未達成"}</button>
           </div>
         ))}
 

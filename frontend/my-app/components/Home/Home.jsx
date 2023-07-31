@@ -21,6 +21,7 @@ const Home = () => {
 	const [completedMenus, setCompletedMenus] = useState([]);
 	const [incompleteMenus, setIncompleteMenus] = useState([]);
 	const [menus, setMenus] = useState([]);
+	const [start_time, setStartTime] = useState([]);
 
 	const { idToken } = useAuth();
 	const { username } = useAuth();
@@ -53,6 +54,8 @@ const Home = () => {
 
 			if (result !== null){
 				setMenus(result["menu_list"]);
+				console.log(result["start_time"]);
+				setStartTime(result["start_time"]);
 
 			} else {
 				setMenus([]);
@@ -111,6 +114,7 @@ const Home = () => {
 		<div>
 			<h2>本日の予定</h2>
 			<TodayDate />
+			<h3> 開始時間 {start_time} </h3>
 			<div>
 				<h2>未達成</h2>
 				{incompleteMenus.map((menu) => (
