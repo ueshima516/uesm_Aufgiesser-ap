@@ -60,7 +60,9 @@ function MyCalendar() {
       }
       );
       const dat = await response.json();
+      // console.log("--------")
       // console.log(dat);
+      // console.log("--------")
 
       setDataOutputText(dat.output_text);
     }
@@ -85,10 +87,20 @@ function MyCalendar() {
       menus_today = menus_today[0].menu_list
       menu_names = menus_today.map((menu) => (menu.menu));
     }
-
+    
+    
+    //menu_names →　src_icon_list 　筋トレアイコンが2つ以上表示されないように
+    let src_icon_list = [];
+    for (let i = 0; i < menu_names.length; i++){
+      if(i === 0) src_icon_list.push(menu_names[i]);
+      else if(icons[menu_names[i]] !== icons[menu_names[i-1]]) {
+        src_icon_list.push(menu_names[i]);
+      }
+    }
+    
     return menus_today.length > 0 ?
       <div>
-        {menu_names.map((name, index) => (<Image key={index} src={icons[name]} width={15} height={15} alt={name} />))}
+        {src_icon_list.map((name, index) => (<Image key={index} src={icons[name]} width={15} height={15} alt={name} />))}
       </div>
       : null;
   };

@@ -12,7 +12,7 @@ const FormForPlan = () => {
     start_date: "",
     end_date: "",
     start_time: "",
-    menu: "",
+    menu: "RUNNING",
     mode: "EASY",
     username: username,
   });
@@ -39,7 +39,7 @@ const FormForPlan = () => {
           "Authorization": idToken,
         },
       });
-
+      console.log(formData);
       if (response.ok) {
         setResponseMessage("成功しました");
       } else {
