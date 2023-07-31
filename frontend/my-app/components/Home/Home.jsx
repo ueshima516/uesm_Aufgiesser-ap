@@ -120,7 +120,7 @@ const Home = () => {
 				{incompleteMenus.map((menu) => (
 					<div key={menu.menu} className={styles.listContainer}>
 						<p className={styles.box}>
-							{menu.menu}: {menu.intensity}
+							{menu.menu}: {menu.intensity} {menu.menu!=="RUNNING" ? "× 3セット" : ""}
 						</p>
 						<button className={styles.button} onClick={() => toggleCompletion(menu.menu)}>未達成</button>
 					</div>
@@ -132,7 +132,7 @@ const Home = () => {
 				{completedMenus.map((menu) => (
 					<div key={menu.menu} className={styles.listContainer}>
 						<p className={`${styles.box} ${styles.completed}`}>
-							{menu.menu}: {menu.intensity}
+							{menu.menu}: {menu.intensity} {menu.menu!=="RUNNING" ? "× 3セット" : ""}
 						</p>
 						<button className={styles.button} onClick={() => toggleCompletion(menu.menu)}>達成</button>
 					</div>
