@@ -3,6 +3,8 @@
 import React, { useEffect, useState }  from "react";
 import { useAuth } from "@/components/Cognito/UseAuth";
 import Navigation from "@/components/Navigation/Navigation"
+import WeeklyAchievement from "@/components/Analysis/WeeklyAchievement"
+import Home from "@/components/Home/Home";
 import MonthlyAcheivement from "@/components/Analysis/MonthlyAchievement";
 import PrivateRoute from "@/components/Cognito/PrivateRoute";
 
@@ -23,7 +25,7 @@ export default function HomePage () {
       <Navigation />
       <h1>分析画面</h1>
       <MonthlyAcheivement />
-      
+      <WeeklyAchievement />
     </PrivateRoute>
   );
 };
