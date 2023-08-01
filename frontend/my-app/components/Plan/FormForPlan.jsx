@@ -3,6 +3,7 @@ import { useAuth } from "@/components/Cognito/UseAuth";
 import dayjs from 'dayjs';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -51,7 +52,6 @@ const FormForPlan = () => {
     //       "Authorization": idToken,
     //     },
     //   });
-    //   console.log(formData);
     //   if (response.ok) {
     //     setResponseMessage("成功しました");
     //   } else {
@@ -69,9 +69,8 @@ const FormForPlan = () => {
 
   const renderForm = () => (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-
-      <form onSubmit={handleSubmit}>
-        <Grid container={true} spacing={3}>
+      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Grid container spacing={3}>
           <Grid item xs={6}>
             <DatePicker
               label={'開始日'}
@@ -90,48 +89,57 @@ const FormForPlan = () => {
               onChange={(value) => handleChange("end_date", value)}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TimePicker
+              fullWidth
+              value={formData.start_time}
+              label="開始時刻"
+              minutesStep={5} // 5分刻みで入力できるように設定
+              onChange={(value) => handleChange("start_time", value)}
+            />
+          </Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id="menu-select-label">メニュー</InputLabel>
+              <Select
+                labelId="menu-select-label"
+                label="メニュー"
+                value={formData.menu}
+                onChange={(event) => handleChange("menu", event.target.value)}
+              >
+                <MenuItem value={"RUNNING"}>ランニング</MenuItem>
+                <MenuItem value={"MUSCLE"}>筋トレ</MenuItem>
+                <MenuItem value={"RUNNING_MUSCLE"}>ランニング＋筋トレ</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id="mode-select-label">モード</InputLabel>
+              <Select
+                labelId="mode-select-label"
+                label="モード"
+                value={formData.mode}
+                onChange={(event) => handleChange("mode", event.target.value)}
+              >
+                <MenuItem value={"EASY"}>EASY</MenuItem>
+                <MenuItem value={"NORMAL"}>NORMAL</MenuItem>
+                <MenuItem value={"HARD"}>HARD</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
-
-        <TimePicker
-          value={formData.start_time}
-          label="開始時刻"
-          minutesStep={5} // 5分刻みで入力できるように設定
-          onChange={(value) => handleChange("start_time", value)}
-        />
-
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel id="menu-select-label">メニュー</InputLabel>
-            <Select
-              labelId="menu-select-label"
-              value={formData.menu}
-              onChange={(event) => handleChange("menu", event.target.value)}
-            >
-              <MenuItem value={"RUNNING"}>ランニング</MenuItem>
-              <MenuItem value={"MUSCLE"}>筋トレ</MenuItem>
-              <MenuItem value={"RUNNING_MUSCLE"}>ランニング＋筋トレ</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-
-        <br />
-        <label>
-          Mode:
-          <select
-            name="mode"
-            value={formData.mode}
-            onChange={handleChange}
+        <Box sx={{ display: 'flex', justifyContent: 'center', m: 3 }}>
+          <Button
+            type="submit"
+            variant="contained"
           >
-            <option value="EASY">EASY</option>
-            <option value="NORMAL">NORMAL</option>
-            <option value="HARD">HARD</option>
-          </select>
-        </label>
-        <br />
-        <button type="submit">
-          送信
-        </button>
-      </form>
+            Plan !
+          </Button>
+        </Box>
+      </Box>
     </LocalizationProvider>
   );
 
@@ -143,7 +151,9 @@ const FormForPlan = () => {
 
   return (
     <Container component="main" maxWidth="sm">
-      <h1>入力フォーム</h1>
+      <Box sx={{ display: 'flex', justifyContent: 'center', m: 3 }}>
+      <h1>計画生成</h1>
+      </Box>
       {!formSubmitted ? renderForm() : renderResponseMessage()}
     </Container>
   );
