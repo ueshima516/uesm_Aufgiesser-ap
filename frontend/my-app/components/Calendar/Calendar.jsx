@@ -41,6 +41,7 @@ function MyCalendar() {
   const { idToken } = useAuth();
   const { username } = useAuth();
 
+  const {mailAddress} = useAuth();
   // わざわざ外側でLoadDataって別関数として定義してるのは、UseEffect内以外からも呼び出したいからだよ～
   useEffect(() => {
     LoadData();
@@ -56,7 +57,7 @@ function MyCalendar() {
           "Authorization": idToken,
         },
         body: JSON.stringify({
-          username: username,
+          username: mailAddress,
         })
       }
       );
@@ -64,7 +65,7 @@ function MyCalendar() {
       // console.log("--------")
       // console.log(dat);
       // console.log("--------")
-
+      console.log("calendar test, mail_address", mailAddress)
       setDataOutputText(dat.output_text);
 
     }

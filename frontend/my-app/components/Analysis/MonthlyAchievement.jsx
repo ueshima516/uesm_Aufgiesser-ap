@@ -13,6 +13,7 @@ const MonthlyAcheivement = () => {
 	// const [title, setTitle] = useState({});
 	const { idToken } = useAuth();
 	const { username } = useAuth();
+	const {mailAddress} = useAuth();
 
 	// let title_res = {"mode": "", "title": "存在しません"}
 	const [title_res, setTitle] = useState({mode:"", title:"ありません"});
@@ -33,7 +34,7 @@ const MonthlyAcheivement = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					username: username,
+					username: mailAddress,
 				})
 			}
 			);

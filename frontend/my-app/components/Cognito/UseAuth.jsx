@@ -35,6 +35,7 @@ const useProvideAuth = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [idToken, setIdToken] = useState('');
+  const [mailAddress, setMailAddress] = useState("");
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()
@@ -45,7 +46,7 @@ const useProvideAuth = () => {
         const currentSession = await Auth.currentSession();
         const currentIdToken = currentSession.getIdToken().getJwtToken();
         setIdToken(currentIdToken);
-
+        setMailAddress(result.attributes.email)
         setIsLoading(false);
       })
       .catch(() => {
@@ -53,6 +54,7 @@ const useProvideAuth = () => {
         setIsAuthenticated(false);
         setIdToken('');
         setIsLoading(false);
+        setMailAddress("");
       });
   }, []);
 
@@ -93,6 +95,7 @@ const useProvideAuth = () => {
       setUsername(result.username);
       setIsAuthenticated(true);
       setIdToken(currentIdToken);
+      setMailAddress(result.attributes.email)
 
       return { success: true, message: '' };
     } catch (error) {
@@ -126,5 +129,6 @@ const useProvideAuth = () => {
     confirmSignUp,
     signIn,
     signOut,
+    mailAddress
   };
 };

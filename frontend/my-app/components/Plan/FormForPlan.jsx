@@ -7,6 +7,7 @@ const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaw
 const FormForPlan = () => {
   const { idToken } = useAuth();
   const { username } = useAuth();
+  const {mailAddress} = useAuth();
 
   const [formData, setFormData] = useState({
     start_date: "",
@@ -14,7 +15,7 @@ const FormForPlan = () => {
     start_time: "",
     menu: "RUNNING",
     mode: "EASY",
-    username: username,
+    username: mailAddress,
   });
   const [responseMessage, setResponseMessage] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);

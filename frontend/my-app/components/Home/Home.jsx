@@ -25,6 +25,7 @@ const Home = () => {
 
 	const { idToken } = useAuth();
 	const { username } = useAuth();
+	const {mailAddress} = useAuth();
 
 
 
@@ -43,7 +44,7 @@ const Home = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					username: username,
+					username: mailAddress,
 				})
 			}
 			);
@@ -79,7 +80,7 @@ const Home = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					username: username,
+					username: mailAddress,
 					date: day,
 					menu: menu,
 				})
