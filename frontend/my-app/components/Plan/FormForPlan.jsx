@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "@/components/Cognito/UseAuth";
-import dayjs from 'dayjs';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -14,6 +13,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 
+  const getTimeString = (date) => {
+    if (!date) return ""; // もし日付がnullなら空文字列を返す
+
+    const hours = date.getHours().toString().padStart(2, '0'); // 時を2桁にフォーマット
+    const minutes = date.getMinutes().toString().padStart(2, '0'); // 分を2桁にフォーマット
+
+    return `${hours}:${minutes}`; // 時間を "HH:mm" 形式の文字列に変換
+  };
 
 const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/plan_schedule";
 
@@ -43,26 +50,26 @@ const FormForPlan = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // try {
-    //   const response = await fetch(API_ENDPOINT_URL, {
-    //     method: "POST",
-    //     body: JSON.stringify(formData),
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Authorization": idToken,
-    //     },
-    //   });
-    //   if (response.ok) {
-    //     setResponseMessage("成功しました");
-    //   } else {
-    //     setResponseMessage("失敗しました");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   setResponseMessage("失敗しました");
-    // }
+    try {
+      const response = await fetch(API_ENDPOINT_URL, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": idToken,
+        },
+      });
+      if (response.ok) {
+        setResponseMessage("成功しました");
+      } else {
+        setResponseMessage("失敗しました");
+      }
+    } catch (error) {
+      console.error(error);
+      setResponseMessage("失敗しました");
+    }
 
-    // setFormSubmitted(true);
+    setFormSubmitted(true);
     console.log(formData);
   };
 
@@ -77,7 +84,7 @@ const FormForPlan = () => {
               views={['year', 'month', 'day']}
               format="YYYY / M / D"
               value={formData.start_date}
-              onChange={(value) => handleChange("start_date", value)}
+              onChange={(value) => handleChange("start_date", value.format('YYYY-MM-DD'))}
             />
           </Grid>
           <Grid item xs={6}>
@@ -86,7 +93,7 @@ const FormForPlan = () => {
               views={['year', 'month', 'day']}
               format="YYYY / M / D"
               value={formData.end_date}
-              onChange={(value) => handleChange("end_date", value)}
+              onChange={(value) => handleChange("end_date", value.format('YYYY-MM-DD'))}
             />
           </Grid>
           <Grid item xs={6}>
@@ -95,7 +102,7 @@ const FormForPlan = () => {
               value={formData.start_time}
               label="開始時刻"
               minutesStep={5} // 5分刻みで入力できるように設定
-              onChange={(value) => handleChange("start_time", value)}
+              onChange={(value) => handleChange("start_time", value.format('HH:mm'))}
             />
           </Grid>
           <Grid item xs={1}></Grid>
