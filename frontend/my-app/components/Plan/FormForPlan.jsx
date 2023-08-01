@@ -26,8 +26,8 @@ const FormForPlan = () => {
       start_date: null,
       end_date: null,
       start_time: null,
-      menu: "RUNNING",
-      mode: "EASY",
+      menu: null,
+      mode: null,
       username: username,
     });
   const [responseMessage, setResponseMessage] = useState("");
