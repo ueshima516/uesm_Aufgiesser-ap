@@ -1,24 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from "@mui/material/Button";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from '@mui/material/Divider';
+
 import styles from '@/styles/Home.module.css';
 import { useAuth } from "@/components/Cognito/UseAuth";
+import { formattedDate } from '../Home/Date';
 
 import Image from 'next/image';
 import Modal from 'react-modal';
 
+import ICON_RUNNING from '@mui/icons-material/DirectionsRun';
+import ICON_PUSHUP from '@/public/images/pushups.png';
+import ICON_SQUAT from '@/public/images/muscle.png';
+import ICON_SITUP from '@/public/images/sit-up.png';
 
-import scheduleIcon1 from '@/public/images/running.png';
-import scheduleIcon2 from '@/public/images/muscle.png';
+
+const icons = {
+  "RUNNING": ICON_RUNNING,
+  "PUSHUP": ICON_PUSHUP,
+  "SQUAT": ICON_SQUAT,
+  "SITUP": ICON_SITUP
+}
+
+const menuIcons = (menu) => {
+  if (menu === "RUNNING") {
+    return <ICON_RUNNING sx={{ width: 40, height: 40 }} />
+  } else if (menu === "PUSHUP") {
+    return <Image key={menu} src={ICON_PUSHUP} width={40} height={40} alt={menu} />
+  } else if (menu === "SQUAT") {
+    return <Image key={menu} src={ICON_SQUAT} width={40} height={40} alt={menu} />
+  } else if (menu === "SITUP") {
+    return <Image key={menu} src={ICON_SITUP} width={40} height={40} alt={menu} />
+  }
+};
 
 
-import dayjs from 'dayjs';
-import Badge from '@mui/material/Badge';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 function getRandomNumber(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
@@ -27,12 +53,6 @@ function getRandomNumber(min, max) {
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 
 
-const icons = {
-  "RUNNING": scheduleIcon1,
-  "PUSHUP": scheduleIcon2,
-  "SQUAT": scheduleIcon2,
-  "SITUP": scheduleIcon2
-}
 
 
 // Date()で取得した日付を"20230726"フォーマットの文字列に整形する関数
@@ -143,53 +163,77 @@ function MyCalendar() {
 
   const ModalContents = () => {
     return (
-      <>
-        <h3>{GetDateString(dateToShow)} の予定</h3>
+      <Grid container spacing={0} alignItems='center' direction="column">
+        <Grid item>
+          <h3>{formattedDate} の予定</h3>
+        </Grid>
 
-        {menusToday.map((item) => (
-          <div key={item.menu} className={styles.listContainer}>
+        <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          {menusToday.map((item) => (
+
+            <>
+              <ListItem key={item.menu} disablePadding>
+
+                <ListItemButton>
+                  <ListItemIcon>
+                    {menuIcons(item.menu)}
+                  </ListItemIcon>
+                  <ListItemText id={item.menu} primary={`${item.menu} ${item.intensity}`} />
+                </ListItemButton>
+
+              </ListItem>
+              <Divider />
+            </>
+          ))}
+
+
+
+        </List>
+
+        {/* {menusToday.map((item) => (
+          <Grid item key={item.menu}>
             <p className={styles.box}>
               {item.menu}: {item.intensity}
             </p>
             <button className={styles.button} >{item.is_done ? "true" : "false"}</button>
-          </div>
-        ))}
+          </Grid>
+        ))} */}
 
-        <button onClick={closeModal}>閉じる</button> {/* 追加 */}
-      </>
+        <Grid item>
+          <Button onClick={closeModal} variant='contained'>閉じる</Button> {/* 追加 */}
+        </Grid>
+      </Grid >
+
     )
 
   }
 
   return (
-    <div>
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar
-          defaultValue={dayjs('2023-08-17')}
-        />s
-      </LocalizationProvider>
-
-
-
-      <h2>カレンダー</h2>
-      <div>
-        <Calendar
-          value={date}
-          onChange={handleDateChange}
-          locale="ja-JP"
-          tileContent={tileContent}
-          onClickDay={(value, event) => openModal(value)} // Pass the formatted date
-        />
-      </div>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="ポップアップウィンドウ"
-      >
-        <ModalContents />
-      </Modal>
-    </div>
+    <Container component="main" maxWidth="sm" sx={{ mt: 5 }}>
+      <Grid container spacing={0} alignItems='center' direction="column">
+        <Grid item>
+          <h2>カレンダー</h2>
+        </Grid>
+        <Grid item>
+          <Calendar
+            value={date}
+            onChange={handleDateChange}
+            locale="ja-JP"
+            tileContent={tileContent}
+            onClickDay={(value, event) => openModal(value)} // Pass the formatted date
+          />
+        </Grid>
+        <Grid item>
+          <Modal
+            isOpen={isModalOpen}
+            onRequestClose={closeModal}
+            contentLabel="ポップアップウィンドウ"
+          >
+            <ModalContents />
+          </Modal>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 

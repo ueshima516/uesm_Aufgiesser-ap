@@ -16,4 +16,4 @@ function TodayDate() {
 }
 
 export default TodayDate;
-export { formattedDateString };
+export { formattedDate, formattedDateString };
