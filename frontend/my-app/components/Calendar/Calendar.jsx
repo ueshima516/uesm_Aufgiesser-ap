@@ -3,10 +3,17 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import styles from '@/styles/Home.module.css';
 import { useAuth } from "@/components/Cognito/UseAuth";
-
 import Image from 'next/image';
 import Modal from 'react-modal';
 
+import dayjs from 'dayjs';
+import Badge from '@mui/material/Badge';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 import scheduleIcon1 from '@/public/images/running.png';
 import scheduleIcon2 from '@/public/images/muscle.png';
@@ -21,7 +28,6 @@ const icons = {
   "SITUP": scheduleIcon2
 }
 
-
 // Date()で取得した日付を"20230726"フォーマットの文字列に整形する関数
 const GetDateString = (dateObj) => {
   const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Tokyo' };
@@ -29,13 +35,40 @@ const GetDateString = (dateObj) => {
   return formattedDate;
 }
 
+function EachDay(props) { // 各日付に対して回るループ
+  const { dataOutputText = [], day, outsideCurrentMonth, ...other } = props;
+
+  // const isSelected =
+  //   !props.outsideCurrentMonth && highlightedDays.includes(props.day.format('YYYY-MM-DD'));
+
+
+  // const handleDayClick = () => {
+  //   if (!outsideCurrentMonth) {
+  //     console.log(props.day.format('YYYY-MM-DD'));
+
+  //   }
+  // };
+
+  return (
+    < PickersDay
+      {...other}
+      outsideCurrentMonth={outsideCurrentMonth}
+      day={day}
+      onClick={handleDayClick}
+    />
+
+  );
+}
+
+
 function MyCalendar() {
   const [dataOutputText, setDataOutputText] = useState([]);
   const [date, setDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [dateToShow, setDateToShow] = useState(new Date());
-  const [menusToday, setMenusToday] = useState([]);
+  const [menuListToShow, setMenuListToShow] = useState([]);
+  const [startTimeToShow, setStartTimeToShow] = useState(null);
 
   const { idToken } = useAuth();
   const { username } = useAuth();
@@ -60,9 +93,9 @@ function MyCalendar() {
       }
       );
       const dat = await response.json();
-      // console.log("--------")
-      // console.log(dat);
-      // console.log("--------")
+      console.log("--------")
+      console.log(dat);
+      console.log("--------")
 
       setDataOutputText(dat.output_text);
     }
@@ -108,17 +141,20 @@ function MyCalendar() {
   useEffect(() => {
     let menus_today = dataOutputText.filter((dat) => (dat.date == GetDateString(date)));
     if (menus_today.length > 0) {
+      setStartTimeToShow(menus_today[0].start_time);
       menus_today = menus_today[0].menu_list;
-      setMenusToday(menus_today);
+      setMenuListToShow(menus_today);
     }
     else {
-      setMenusToday([])
+      setStartTimeToShow(null);
+      setMenuListToShow([])
     }
     console.log(menus_today);
-  }, [dateToShow]);
+  },
+    [dateToShow]);
 
   const openModal = (date) => {
-    console.log(date);
+    // console.log(date);
     setDateToShow(date);
     setIsModalOpen(true);
 
@@ -132,10 +168,11 @@ function MyCalendar() {
     return (
       <>
         <h3>{GetDateString(dateToShow)} の予定</h3>
-
-        {menusToday.map((item) => (
+        {startTimeToShow != null ? <>開始時刻:{startTimeToShow}</> : undefined}
+        {menuListToShow.map((item) => (
           <div key={item.menu} className={styles.listContainer}>
             <p className={styles.box}>
+              {item.start_time}
               {item.menu}: {item.intensity}
             </p>
             <button className={styles.button} >{item.is_done ? "true" : "false"}</button>
@@ -149,17 +186,48 @@ function MyCalendar() {
   }
 
   return (
-    <div>
+    <>
       <h2>カレンダー</h2>
-      <div>
-        <Calendar
-          value={date}
-          onChange={handleDateChange}
-          locale="ja-JP"
-          tileContent={tileContent}
-          onClickDay={(value, event) => openModal(value)} // Pass the formatted date
-        />
-      </div>
+
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        カレンダーが小さすぎるよ～(;_;)
+        <Box sx={{ height: 10000, overflow: "visible" }}>
+          <DateCalendar
+            defaultValue={dayjs(new Date())}
+            onMonthChange={
+              console.log("onMonthChange invoked!")
+            }
+            slots={{
+              day: EachDay,
+            }}
+            slotProps={{
+              day: {
+                dataOutputText,
+              },
+            }}
+            sx={{
+              width: "100%", overflow: 'visible', height: 700
+              , "&.MuiDateCalendar-root": {
+                height: "100%",
+                overflow: 'visible',
+              }
+              , "&.MuiDateCalendar-viewTransitionContainer": {
+                height: "100%",
+                overflow: 'visible',
+              }
+            }}
+          />
+        </Box>
+      </LocalizationProvider>
+
+      <Calendar
+        value={date}
+        onChange={handleDateChange}
+        locale="ja-JP"
+        tileContent={tileContent}
+        onClickDay={(value, event) => openModal(value)} // Pass the formatted date
+      />
+
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -167,7 +235,7 @@ function MyCalendar() {
       >
         <ModalContents />
       </Modal>
-    </div>
+    </>
   );
 }
 

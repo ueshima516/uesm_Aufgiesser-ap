@@ -2,25 +2,26 @@ import React, { useState } from "react";
 import { useAuth } from "@/components/Cognito/UseAuth";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
 
-  const getTimeString = (date) => {
-    if (!date) return ""; // もし日付がnullなら空文字列を返す
 
-    const hours = date.getHours().toString().padStart(2, '0'); // 時を2桁にフォーマット
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // 分を2桁にフォーマット
+// const getTimeString = (date) => {
+//   if (!date) return ""; // もし日付がnullなら空文字列を返す
 
-    return `${hours}:${minutes}`; // 時間を "HH:mm" 形式の文字列に変換
-  };
+//   const hours = date.getHours().toString().padStart(2, '0'); // 時を2桁にフォーマット
+//   const minutes = date.getMinutes().toString().padStart(2, '0'); // 分を2桁にフォーマット
+
+//   return `${hours}:${minutes}`; // 時間を "HH:mm" 形式の文字列に変換
+// };
 
 const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/plan_schedule";
 
@@ -151,9 +152,9 @@ const FormForPlan = () => {
   );
 
   const renderResponseMessage = () => (
-    <div>
+    <Box sx={{ display: 'flex', justifyContent: 'center', m: 3 }}>
       <p>{responseMessage}</p>
-    </div>
+    </Box>
   );
 
   return (
