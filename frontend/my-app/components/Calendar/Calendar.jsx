@@ -11,19 +11,6 @@ import Modal from 'react-modal';
 import scheduleIcon1 from '@/public/images/running.png';
 import scheduleIcon2 from '@/public/images/muscle.png';
 
-
-import dayjs from 'dayjs';
-import Badge from '@mui/material/Badge';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
-function getRandomNumber(min, max) {
-  return Math.round(Math.random() * (max - min) + min);
-}
-
-
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_plan"
 
 
@@ -163,15 +150,6 @@ function MyCalendar() {
 
   return (
     <div>
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar
-          defaultValue={dayjs('2023-08-17')}
-        />s
-      </LocalizationProvider>
-
-
-
       <h2>カレンダー</h2>
       <div>
         <Calendar
