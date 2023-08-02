@@ -19,7 +19,6 @@ function Navigation() {
     const result = await auth.signOut();
 
     if (result.success) {
-      alert(result.message);
     } else {
       alert(result.message);
     }
@@ -85,7 +84,12 @@ function Navigation() {
             <IconButton
               aria-label="logout"
               sx={{ color: 'black', backgroundColor: 'aquamarine' }}
-              onClick={executeSignOut}
+              onClick={() => {
+                const result = window.confirm("本当にログアウトしますか？");
+                if (result) {
+                  executeSignOut()
+                }
+              }}
             >
               <LogoutIcon />
             </IconButton>

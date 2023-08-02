@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import Button from '@mui/material/Button';
 import { Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto';
 import styles from '@/styles/Home.module.css';
 import { useAuth } from "@/components/Cognito/UseAuth";
 import Container from '@mui/material/Container';
+import Box from "@mui/material/Box";
+import Grid from '@mui/material/Grid';
 
 //
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_month_analysis"
@@ -77,8 +80,8 @@ const MonthlyAcheivement = () => {
 		datasets: [
 			{
 				data: [ratio, 100 - ratio],
-				backgroundColor: ['#1ABC9C', '#E74C3C'],
-				hoverBackgroundColor: ['#1ABC9C', '#E74C3C'],
+				backgroundColor: ['#1ABC9C', '#D3D3D3'],
+				hoverBackgroundColor: ['#1ABC9C', '#D3D3D3'],
 			},
 		],
 	};
@@ -90,15 +93,22 @@ const MonthlyAcheivement = () => {
 	};
 
 	return (
-		<div>
-			<p className={styles.box}>
-				称号: {title_res.mode} {title_res.title}
-			</p>
-			<h1>先月の達成度</h1>
-			<Container component="main" maxWidth="sm">
+		<Grid container spacing={0} alignItems='center' direction="column">
+			<Grid item>
+				<h2>称号</h2>
+			</Grid>
+			<Grid item>
+				<Button variant='outlined' color='success'>
+					{title_res.mode} {title_res.title}
+				</Button>
+			</Grid>
+			<Grid item>
+				<h2>先月の達成度</h2>
+			</Grid>
+			<Grid item sx={{ height: 300 }}>
 				<Doughnut data={glaphData} options={options} />
-			</Container>
-		</div>
+			</Grid>
+		</Grid>
 	);
 };
 
