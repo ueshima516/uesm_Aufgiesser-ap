@@ -10,19 +10,16 @@ import PrivateRoute from "@/components/Cognito/PrivateRoute";
 import Container from '@mui/material/Container';
 
 
-
 export default function HomePage() {
   const { isLoading } = useAuth();
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
 
-
-
   return (
     <PrivateRoute>
+      <Navigation />
       <Container component="main" maxWidth="sm">
-        <Navigation />
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <h1>分析画面</h1>
         </Box>

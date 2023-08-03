@@ -8,7 +8,7 @@ import Container from '@mui/material/Container';
 import Box from "@mui/material/Box";
 import Grid from '@mui/material/Grid';
 
-//
+
 const URL_LOAD = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/load_month_analysis"
 
 
@@ -17,6 +17,7 @@ const MonthlyAcheivement = () => {
 	// const [title, setTitle] = useState({});
 	const { idToken } = useAuth();
 	const { username } = useAuth();
+	const {mailAddress} = useAuth();
 
 	// let title_res = {"mode": "", "title": "存在しません"}
 	const [title_res, setTitle] = useState({ mode: "", title: "ありません" });
@@ -37,7 +38,7 @@ const MonthlyAcheivement = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					username: username,
+					username: mailAddress,
 				})
 			}
 			);
@@ -50,8 +51,6 @@ const MonthlyAcheivement = () => {
 
 
 				const title = data.output_text.ranks
-				console.log(title_res)
-				console.log("----")
 				for (const mode_ of ["EASY", "NORMAL", "HARD"]) {
 					if (title[mode_] !== null) {
 						setTitle({ mode: mode_, title: title[mode_] });
@@ -72,7 +71,11 @@ const MonthlyAcheivement = () => {
 
 	// データ(達成率)がロードされていない場合の処理
 	if (ratio === null) {
-		return <div>まだデータがないよ！運動を続けてね！</div>;
+		return (
+			<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+			先月のデータがないよ！運動を続けてね！
+			</Box>
+		);
 	}
 
 	const glaphData = {

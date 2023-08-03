@@ -12,6 +12,7 @@ const WeeklyAchievement = () => {
 
   const { idToken } = useAuth();
   const { username } = useAuth();
+  const {mailAddress} = useAuth();
 
   useEffect(() => {
     LoadData();
@@ -26,7 +27,7 @@ const WeeklyAchievement = () => {
           "Authorization": idToken,
         },
         body: JSON.stringify({
-          username: username,
+          username: mailAddress,
         })
       }
       );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import Image from 'next/image';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -15,7 +15,7 @@ import TodayDate from "./Date";
 
 import ICON_RUNNING from '@mui/icons-material/DirectionsRun';
 import ICON_PUSHUP from '@/public/images/pushups.png';
-import ICON_SQUAT from '@/public/images/muscle.png';
+import ICON_SQUAT from '@/public/images/squat.png';
 import ICON_SITUP from '@/public/images/sit-up.png';
 
 const menuIcons = (menu) => {
@@ -50,8 +50,7 @@ const Home = () => {
 
 	const { idToken } = useAuth();
 	const { username } = useAuth();
-
-
+	const {mailAddress} = useAuth();
 
 	// わざわざ外側でLoadDataって別関数として定義してるのは、UseEffect内以外からも呼び出したいからだよ～
 	useEffect(() => {
@@ -68,13 +67,12 @@ const Home = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					username: username,
+					username: mailAddress,
 				})
 			}
 			);
 			const data = await response.json();
 
-			console.log(data);
 			const result = data.output_text.find(item => item.date === day) || null;
 
 			if (result !== null) {
@@ -105,7 +103,7 @@ const Home = () => {
 					"Authorization": idToken,
 				},
 				body: JSON.stringify({
-					username: username,
+					username: mailAddress,
 					date: day,
 					menu: menu,
 				})
@@ -133,7 +131,7 @@ const Home = () => {
 	}
 
 	return (
-		<Container component="main" maxWidth="sm" sx={{mt: 5}}>
+		<Container component="main" maxWidth="sm" sx={{ mt: 5 }}>
 			<Grid container spacing={0} alignItems='center' direction="column">
 				<Grid item>
 					<TodayDate />
@@ -142,7 +140,7 @@ const Home = () => {
 					<h2>本日の予定</h2>
 				</Grid>
 				<Grid item>
-					<h3>開始時刻: {startTime}</h3>
+					<h3>{startTime !== null ? `開始時刻: ${startTime}`: "今日は予定が無いよ〜"}</h3>
 				</Grid>
 			</Grid>
 
@@ -154,13 +152,12 @@ const Home = () => {
 					justifyContent: 'center',
 				}}
 			>
-				<List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-					{incompleteMenus.map((menu) => {
+				<List dense sx={{ width: '100%', maxWidth: 360 }}>
+					{incompleteMenus.map((menu, index) => {
 						const labelId = `checkbox-list-secondary-label-${menu}`;
 						return (
-							<>
+							<Fragment key={index}>
 								<ListItem
-									key={menu.menu}
 									secondaryAction={
 										<Button
 											variant='contained'
@@ -170,16 +167,17 @@ const Home = () => {
 										</Button>
 									}
 									disablePadding
+									sx={{ bgcolor: 'background.paper'}}
 								>
 									<ListItemButton>
 										<ListItemIcon>
 											{menuIcons(menu.menu)}
 										</ListItemIcon>
-										<ListItemText id={menu.menu} primary={menu.menu} />
+										<ListItemText id={menu.menu} primary={`${menu.menu} ${menu.intensity}`} />
 									</ListItemButton>
 								</ListItem>
 								<Divider />
-							</>
+							</Fragment>
 						);
 					})}
 				</List>
@@ -194,12 +192,11 @@ const Home = () => {
 				}}
 			>
 				<List dense sx={{ width: '100%', maxWidth: 360 }}>
-					{completedMenus.map((menu) => {
+					{completedMenus.map((menu, index) => {
 						const labelId = `checkbox-list-secondary-label-${menu}`;
 						return (
-							<>
+							<Fragment key={index}>
 								<ListItem
-									key={menu.menu}
 									secondaryAction={
 										<Button
 											variant='outlined'
@@ -220,11 +217,11 @@ const Home = () => {
 										<ListItemIcon>
 											{menuIcons(menu.menu)}
 										</ListItemIcon>
-										<ListItemText id={menu.menu} primary={menu.menu} />
+										<ListItemText id={menu.menu} primary={`${menu.menu} ${menu.intensity}`} />
 									</ListItemButton>
 								</ListItem>
 								<Divider />
-							</>
+							</Fragment>
 						);
 					})}
 				</List>

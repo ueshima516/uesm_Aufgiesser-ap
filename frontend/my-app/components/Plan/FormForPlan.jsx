@@ -13,20 +13,21 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 
-  const getTimeString = (date) => {
-    if (!date) return ""; // もし日付がnullなら空文字列を返す
+const getTimeString = (date) => {
+  if (!date) return ""; // もし日付がnullなら空文字列を返す
 
-    const hours = date.getHours().toString().padStart(2, '0'); // 時を2桁にフォーマット
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // 分を2桁にフォーマット
+  const hours = date.getHours().toString().padStart(2, '0'); // 時を2桁にフォーマット
+  const minutes = date.getMinutes().toString().padStart(2, '0'); // 分を2桁にフォーマット
 
-    return `${hours}:${minutes}`; // 時間を "HH:mm" 形式の文字列に変換
-  };
+  return `${hours}:${minutes}`; // 時間を "HH:mm" 形式の文字列に変換
+};
 
 const API_ENDPOINT_URL = "https://5t1rm2y7qf.execute-api.ap-northeast-1.amazonaws.com/dev/plan_schedule";
 
 const FormForPlan = () => {
   const { idToken } = useAuth();
   const { username } = useAuth();
+  const {mailAddress} = useAuth();
 
   const [formData, setFormData] = useState(
     {
@@ -35,7 +36,7 @@ const FormForPlan = () => {
       start_time: null,
       menu: null,
       mode: null,
-      username: username,
+      username: mailAddress,
     });
   const [responseMessage, setResponseMessage] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -70,7 +71,6 @@ const FormForPlan = () => {
     }
 
     setFormSubmitted(true);
-    console.log(formData);
   };
 
 
@@ -151,15 +151,15 @@ const FormForPlan = () => {
   );
 
   const renderResponseMessage = () => (
-    <div>
-      <p>{responseMessage}</p>
-    </div>
+    <Box sx={{ display: 'flex', justifyContent: 'center', m: 3 }}>
+      <h2>{responseMessage}</h2>
+    </Box>
   );
 
   return (
     <Container component="main" maxWidth="sm">
       <Box sx={{ display: 'flex', justifyContent: 'center', m: 3 }}>
-      <h1>計画生成</h1>
+        <h1>計画生成</h1>
       </Box>
       {!formSubmitted ? renderForm() : renderResponseMessage()}
     </Container>

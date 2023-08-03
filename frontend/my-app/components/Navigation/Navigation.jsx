@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
@@ -11,6 +12,9 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { LinkIconButton } from "@/components/MaterialUI/CustomizedComponents";
 import { useAuth } from '@/components/Cognito/UseAuth';
+
+import LOGO from '@/public/images/Fotshow-all.svg';
+
 
 function Navigation() {
   const auth = useAuth();
@@ -32,15 +36,14 @@ function Navigation() {
           <Box
             component="span"
             sx={{
-              height: 24,
+              height: 80,
               my: 1,
-              alignItems: 'center',
+              alignItems: 'fix-start',
               justifyContent: 'fix-start',
               display: 'flex',
             }}
           >
-            {/* FitShow */}
-            <h1 style={{ color: '#33CC66', fontFamily: 'Arial, sans-serif', fontSize: '36px' }}>FitShow</h1>
+            <Image src={LOGO} width={250} alt={"Fitshow"} />
           </Box>
 
         </Grid>
