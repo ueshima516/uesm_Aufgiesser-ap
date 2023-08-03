@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "sample" {
-  bucket = "aufgiesser-sample-bucket-${var.env}"
+  bucket = "aufgiesser-sample-bucket-${var.name}"
 }
 
 resource "aws_s3_bucket_public_access_block" "example" {
@@ -38,7 +38,7 @@ resource "aws_s3_bucket_public_access_block" "example" {
 #         "s3:GetObject"
 #       ],
 #       "Resource": [
-#         "arn:aws:s3:::aufgiesser-sample-bucket-${var.env}/*"
+#         "arn:aws:s3:::aufgiesser-sample-bucket-${var.name}/*"
 #       ]
 #     }
 #   ]
