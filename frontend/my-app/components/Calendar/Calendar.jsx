@@ -91,6 +91,7 @@ function MyCalendar() {
       const dat = await response.json();
 
       setDataOutputText(dat.output_text);
+
     }
     catch (error) {
       console.error("Error Fetching Schedule data:", error);
@@ -140,14 +141,17 @@ function MyCalendar() {
 
   useEffect(() => {
     let menus_today = dataOutputText.filter((dat) => (dat.date == GetDateString(date)));
+
     if (menus_today.length > 0) {
       const menu_start_time = menus_today[0].start_time;
       menus_today = menus_today[0].menu_list;
+
       setMenusToday(menus_today);
       setStartTime(menu_start_time);
     }
     else {
       setMenusToday([])
+      setStartTime([])
     }
   }, [dateToShow]);
 
