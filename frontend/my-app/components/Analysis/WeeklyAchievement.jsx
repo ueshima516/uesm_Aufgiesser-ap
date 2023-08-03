@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import Grid from '@mui/material/Grid';
 
 import { useAuth } from "@/components/Cognito/UseAuth";
 
@@ -11,6 +12,7 @@ const WeeklyAchievement = () => {
 
   const { idToken } = useAuth();
   const { username } = useAuth();
+  const {mailAddress} = useAuth();
 
   useEffect(() => {
     LoadData();
@@ -25,14 +27,14 @@ const WeeklyAchievement = () => {
           "Authorization": idToken,
         },
         body: JSON.stringify({
-          username: username,
+          username: mailAddress,
         })
       }
       );
-        
+
       const dat = await response.json();
       setData(dat.output_text);
-  
+
     }
     catch (error) {
       console.error("Error Fetching Schedule data:", error);
@@ -45,20 +47,38 @@ const WeeklyAchievement = () => {
     y: data_rate[key]
   }));
 
+  const dateTickFormatter = (value) => {
+    const dateList = value.split('_')
+    const startDate = `${parseInt(dateList[0].slice(4, 6), 10)}` + "/" + `${parseInt(dateList[0].slice(6, 8), 10)}`
+    const endDate = `${parseInt(dateList[1].slice(4, 6), 10)}` + "/" + `${parseInt(dateList[1].slice(6, 8), 10)}`
+
+
+    return (
+      startDate + "~" + endDate
+    )
+  }
+
   return (
-    <div>
-      <h3>週単位の達成率</h3>
-      <ResponsiveContainer width="60%" height={200}>
+    <>
+      <Grid container spacing={0} alignItems='center' direction="column">
+
+        <Grid item mt={2}>
+          <h2>週単位の達成率</h2>
+        </Grid>
+      </Grid>
+
+      <ResponsiveContainer height={300} width="100%">
         <LineChart data={chartData} >
-          <CartesianGrid strokeDasharray="3 3"/>
-          <XAxis dataKey="x" tickFormatter={(value) => value.split('2023')[1].split('_')[0] + "-" + value.split('2023')[2]} />
-          <YAxis />
-          <Tooltip/>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="x" tickFormatter={dateTickFormatter} angle={-45} textAnchor="end" height={80} />
+          <YAxis dataKey="y" tickFormatter={(value) => `${value}%`} domain={[0, 100]} />
+          <Tooltip />
           <Legend />
           <Line type="linear" dataKey="y" name="達成率" stroke="#8884d8" />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+
+    </>
   );
 }
 

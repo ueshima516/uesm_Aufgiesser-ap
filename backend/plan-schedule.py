@@ -41,9 +41,9 @@ INTENSITY = {
     "HARD": "30分"
   },
   "MUSCLE":{
-    "EASY": "5回",
-    "NORMAL": "10回",
-    "HARD": "20回"
+    "EASY": "5回 × 3セット",
+    "NORMAL": "10回 × 3セット",
+    "HARD": "20回 × 3セット"
   }
 }
 
@@ -118,6 +118,3 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
       dynamodb.put_item(
         Item=schedule_res
       )   
-    # exit()
-
-
