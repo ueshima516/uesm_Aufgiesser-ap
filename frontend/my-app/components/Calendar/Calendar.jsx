@@ -151,14 +151,13 @@ function MyCalendar() {
     }
     else {
       setMenusToday([])
-      setStartTime([])
+      setStartTime(null)
     }
   }, [dateToShow]);
 
   const openModal = (date) => {
     setDateToShow(date);
     setIsModalOpen(true);
-
   };
 
   const closeModal = () => {
@@ -184,7 +183,7 @@ function MyCalendar() {
             <h3>{GetShowDateString(dateToShow)} の予定</h3>
           </Grid>
           <Grid item>
-            <h4>開始時刻: {startTime}</h4>
+            <h4>{startTime !== null ? `開始時刻: ${startTime}` : "予定なし"}</h4>
           </Grid>
 
 
