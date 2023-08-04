@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
+import Box from '@mui/material/Box';
 import { useAuth } from '@/components/Cognito/UseAuth';
 import styles from '@/styles/LoginForm.module.css';
+
+import LOGO from '@/public/images/Fotshow-all.svg';
 
 const LoginForm = () => {
   const auth = useAuth();
@@ -32,6 +36,16 @@ const LoginForm = () => {
 
   return (
     <div className={styles.container}>
+      <Box
+        component="span"
+        sx={{
+          height: 80,
+          my: 1,
+          display: 'flex',
+        }}
+      >
+        <Image src={LOGO} width={250} alt={"Fitshow"} />
+      </Box>
       <h2>Login</h2>
       <form className={styles.form} onSubmit={executeSignIn}>
         <input

@@ -41,15 +41,15 @@ INTENSITY = {
     "HARD": "30分"
   },
   "MUSCLE":{
-    "EASY": "5回",
-    "NORMAL": "10回",
-    "HARD": "20回"
+    "EASY": "5回 × 3セット",
+    "NORMAL": "10回 × 3セット",
+    "HARD": "20回 × 3セット"
   }
 }
 
 
 def lambda_handler(event, context):
-  DEBUG = True
+  DEBUG = False
   if(DEBUG==False):
     body = json.loads(event["body"])
     start_date = body["start_date"]
@@ -69,6 +69,14 @@ def lambda_handler(event, context):
   
   plan_schedule(username, start_date, end_date, start_time, menu, mode)
   
+  return {
+      'statusCode': 200,
+      'body': json.dumps({"output_text": ""}),
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
+  }
+
 
 def plan_schedule(username, start_date, end_date, start_time, menu, mode):
   dic = {}
@@ -77,9 +85,11 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
     dic.update({"RUNNING": FREQ["RUNNING"]["ONLY"][mode]})
   elif(menu=="MUSCLE"):
     dic.update(FREQ["MUSCLE"]["ONLY"])
-  else:
+  elif(menu=="RUNNING_MUSCLE"):
     dic.update({"RUNNING": FREQ["RUNNING"]["WITH"][mode]})
     dic.update(FREQ["MUSCLE"]["WITH"])
+  else:
+    raise ValueError(menu, "is not defined")
   print(dic)
 
   delta = (end_date - start_date).days + 1
@@ -98,8 +108,9 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
         sch_ = {"intensity": intensity, "is_done": False, "menu": menu_}
         schedule.append(sch_)
 
+
     tar_date_key = tar_date.strftime('%Y%m%d')
-    schedule_res = {"username": username, "date": tar_date_key, "menu_list": schedule}
+    schedule_res = {"username": username, "date": tar_date_key, "start_time": start_time, "mode": mode, "menu_list": schedule}
     
     if(schedule != []):
       print(schedule_res)
@@ -107,6 +118,3 @@ def plan_schedule(username, start_date, end_date, start_time, menu, mode):
       dynamodb.put_item(
         Item=schedule_res
       )   
-    # exit()
-
-

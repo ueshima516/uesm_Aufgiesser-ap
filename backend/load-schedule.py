@@ -33,6 +33,7 @@ def search_element_by_date(data, date_value):
     return dic
 
 
+
 def lambda_handler(event, context):
 
     ALL_SCAN = False # DBの全データを読み込むならTrue, メアドで抽出するならFalse
