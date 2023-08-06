@@ -1,5 +1,5 @@
 # Aufgiesser-ap
-team 2: † Aufgiesser † の開発用リポジトリ
+† Aufgiesser † の開発用リポジトリからとってきた
 
 ## ブランチの命名規則
 - main
